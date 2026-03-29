@@ -17,6 +17,7 @@ export const up = (pgm) => {
       room_id SERIAL PRIMARY KEY,
       type room_type DEFAULT 'direct',
       room_name VARCHAR(100)
+      last_msg_ref INT REFERENCES messages(msg_id) ON DELETE SET NULL
     );
 
     -- Messages
