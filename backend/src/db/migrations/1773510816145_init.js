@@ -3,6 +3,7 @@ export const up = (pgm) => {
     -- 1. Users
     CREATE TABLE IF NOT EXISTS users (
       user_id SERIAL PRIMARY KEY,
+      username VARCHAR(50) UNIQUE NOT NULL,
       email VARCHAR(100) UNIQUE NOT NULL,
       pwd VARCHAR(255) NOT NULL CHECK (LENGTH(pwd) >= 8),
       created_at TIMESTAMP DEFAULT NOW()
