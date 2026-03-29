@@ -1,6 +1,6 @@
 export const up = (pgm) => {
   pgm.sql(`
-    -- Users
+    -- 1. Users
     CREATE TABLE IF NOT EXISTS users (
       user_id SERIAL PRIMARY KEY,
       email VARCHAR(100) UNIQUE NOT NULL,
@@ -8,19 +8,18 @@ export const up = (pgm) => {
       created_at TIMESTAMP DEFAULT NOW()
     );
 
-    -- Enums
+    -- 2. Enums
     CREATE TYPE room_type AS ENUM ('direct', 'group');
     CREATE TYPE user_role AS ENUM ('admin', 'member');
 
-    -- Rooms (without last_msg_ref first)
+    -- 3. Rooms without last_msg_ref
     CREATE TABLE IF NOT EXISTS rooms (
       room_id SERIAL PRIMARY KEY,
       type room_type DEFAULT 'direct',
       room_name VARCHAR(100)
-      last_msg_ref INT REFERENCES messages(msg_id) ON DELETE SET NULL
     );
 
-    -- Messages
+    -- 4. Messages
     CREATE TABLE IF NOT EXISTS messages (
       msg_id SERIAL PRIMARY KEY,
       room_id INT REFERENCES rooms(room_id) ON DELETE CASCADE,
@@ -30,7 +29,14 @@ export const up = (pgm) => {
       content TEXT NOT NULL
     );
 
-    -- Members
+    -- 5. Alter rooms to add last_msg_ref FK due to circular dependency we add this column after creating messages table
+    ALTER TABLE rooms
+    ADD COLUMN last_msg_ref INT;
+    ALTER TABLE rooms
+    ADD CONSTRAINT fk_last_msg
+    FOREIGN KEY (last_msg_ref) REFERENCES messages(msg_id) ON DELETE SET NULL;
+
+    -- 6. Members
     CREATE TABLE IF NOT EXISTS members (
       room_id INT REFERENCES rooms(room_id) ON DELETE CASCADE,
       user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
@@ -38,6 +44,7 @@ export const up = (pgm) => {
       joined_at TIMESTAMP DEFAULT NOW(),
       PRIMARY KEY (room_id, user_id)
     );
+  
   `);
 };
 

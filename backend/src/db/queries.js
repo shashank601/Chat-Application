@@ -118,7 +118,7 @@ export const get_my_rooms = `
         ON m.room_id = r.room_id
 
     LEFT JOIN messages msg 
-        ON r.last_msg_ref = msg.message_id
+        ON r.last_msg_ref = msg.msg_id
 
     LEFT JOIN members dm 
         ON r.type = 'direct' 
@@ -135,7 +135,7 @@ export const get_my_rooms = `
 //========[ messages ]========
 export const get_messages = `
     SELECT 
-        m.message_id,
+        m.msg_id,
         m.room_id,
         u.username AS sender_name,
         m.content,
@@ -151,25 +151,25 @@ export const add_message = `
     WITH new_msg AS (
         INSERT INTO messages (room_id, sender_id, content)
         VALUES ($1, $2, $3)
-        RETURNING message_id
+        RETURNING msg_id
     )
     UPDATE rooms
-    SET last_msg_ref = new_msg.message_id
+    SET last_msg_ref = new_msg.msg_id       
     FROM new_msg
     WHERE rooms.room_id = $1
-    RETURNING new_msg.message_id;
+    RETURNING new_msg.msg_id;
 `
 
 
 export const delete_message = `
     UPDATE messages
     SET is_deleted = TRUE
-    WHERE message_id = $1 AND sender_id = $2
-    RETURNING message_id;
+    WHERE msg_id = $1 AND sender_id = $2
+    RETURNING msg_id;
 `
 
 export const clear_room = `
     DELETE FROM messages
     WHERE room_id = $1
-    RETURNING message_id;
+    RETURNING msg_id;
 `
