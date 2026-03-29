@@ -145,6 +145,14 @@ export const check_user_exists = `
     WHERE user_id = $1;
 `
 
+export const check_pair_exists = `
+    SELECT r.room_id
+    FROM rooms r
+    JOIN members m1 ON r.room_id = m1.room_id AND m1.user_id = $1
+    JOIN members m2 ON r.room_id = m2.room_id AND m2.user_id = $2
+    WHERE r.type = 'direct';
+`
+
 //========[ messages ]========
 export const get_messages = `
     SELECT 
