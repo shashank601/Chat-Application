@@ -100,6 +100,13 @@ export const promote_to_admin = `
 
 
 //========[ sidebar ]========
+export const search_users = `
+    SELECT user_id, username, email
+    FROM users
+    WHERE username ILIKE $1
+        AND user_id != $2
+    LIMIT 10;
+`
 
 export const get_my_rooms = `
     SELECT 
