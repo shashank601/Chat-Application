@@ -17,14 +17,13 @@ export const up = (pgm) => {
       room_id SERIAL PRIMARY KEY,
       type room_type DEFAULT 'direct',
       room_name VARCHAR(100)
-    -- last_msg_ref INT REFERENCES messages(msg_id) handled in application logic due to circular dependency
     );
 
     -- Messages
     CREATE TABLE IF NOT EXISTS messages (
       msg_id SERIAL PRIMARY KEY,
-      room_id INT REFERENCES rooms(room_id),
-      sender_id INT REFERENCES users(user_id),
+      room_id INT REFERENCES rooms(room_id) ON DELETE CASCADE,
+      sender_id INT REFERENCES users(user_id) ON DELETE CASCADE,
       created_at TIMESTAMP DEFAULT NOW(),
       is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
       content TEXT NOT NULL
@@ -32,11 +31,11 @@ export const up = (pgm) => {
 
     -- Members
     CREATE TABLE IF NOT EXISTS members (
-      user_id INT REFERENCES users(user_id),
-      room_id INT REFERENCES rooms(room_id),
+      room_id INT REFERENCES rooms(room_id) ON DELETE CASCADE,
+      user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
       role user_role DEFAULT 'member',
       joined_at TIMESTAMP DEFAULT NOW(),
-      PRIMARY KEY (user_id, room_id)
+      PRIMARY KEY (room_id, user_id)
     );
   `);
 };
