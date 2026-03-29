@@ -139,6 +139,12 @@ export const get_my_rooms = `
     ORDER BY msg.created_at DESC NULLS LAST;
 `
 
+export const check_user_exists = `
+    SELECT user_id
+    FROM users
+    WHERE user_id = $1;
+`
+
 //========[ messages ]========
 export const get_messages = `
     SELECT 
