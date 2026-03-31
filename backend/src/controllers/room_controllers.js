@@ -6,7 +6,11 @@ import {
     check_pair_exists, 
     get_my_rooms as get_my_rooms_query, 
     get_room_members as get_room_members_query,
-    is_user_in_room as is_user_in_room_query 
+    is_user_in_room as is_user_in_room_query,
+    delete_direct_room as delete_direct_room_query,
+    delete_group_room as delete_group_room_query,
+    get_room as get_room_query,
+    check_admin as check_admin_query
 } from "../db/queries.js";
 import { pool } from "../config/db.js";
 
@@ -64,6 +68,47 @@ export const create_room = async_handler(async (req, res) => {
         client.release();
     }
 });
+
+
+
+
+export const delete_room = async_handler(async (req, res) => {
+    const room_id = req.params.room_id;
+    const user_id = req.user.id;
+    if (!room_id) {
+        const err = new Error('Room ID is required');
+        err.statusCode = 400;
+        throw err;
+    }
+
+    const { rows: [member] } = await pool.query(is_user_in_room_query, [room_id, user_id]);
+
+    if (!member) {
+        const err = new Error('You are not a member of this room');
+        err.statusCode = 403;
+        throw err;
+    }
+    const { rows: [room] } = await pool.query(get_room_query, [room_id]);
+    
+    if (room.type === 'direct') {
+
+        await pool.query(delete_direct_room_query, [room_id]);
+        
+    } else {
+        const { rows: admin_row} = await pool.query(check_admin_query, [room_id, user_id]);
+        if (admin_row.length === 0) {
+            const err = new Error('Only admins can delete group rooms');
+            err.statusCode = 403;
+            throw err;
+        }
+        
+        await pool.query(delete_group_room_query, [room_id]);
+    }
+    
+    res.status(200).json({ message: 'Room deleted successfully' });
+});
+
+
 
 
 
