@@ -100,6 +100,13 @@ export const promote_to_admin = `
 
 
 //========[ sidebar ]========
+export const search_users = `
+    SELECT user_id, username, email
+    FROM users
+    WHERE username ILIKE $1
+        AND user_id != $2
+    LIMIT 10;
+`
 
 export const get_my_rooms = `
     SELECT 
@@ -118,7 +125,7 @@ export const get_my_rooms = `
         ON m.room_id = r.room_id
 
     LEFT JOIN messages msg 
-        ON r.last_msg_ref = msg.message_id
+        ON r.last_msg_ref = msg.msg_id
 
     LEFT JOIN members dm 
         ON r.type = 'direct' 
@@ -132,10 +139,24 @@ export const get_my_rooms = `
     ORDER BY msg.created_at DESC NULLS LAST;
 `
 
+export const check_user_exists = `
+    SELECT user_id
+    FROM users
+    WHERE user_id = $1;
+`
+
+export const check_pair_exists = `
+    SELECT r.room_id
+    FROM rooms r
+    JOIN members m1 ON r.room_id = m1.room_id AND m1.user_id = $1
+    JOIN members m2 ON r.room_id = m2.room_id AND m2.user_id = $2
+    WHERE r.type = 'direct';
+`
+
 //========[ messages ]========
 export const get_messages = `
     SELECT 
-        m.message_id,
+        m.msg_id,
         m.room_id,
         u.username AS sender_name,
         m.content,
@@ -151,25 +172,25 @@ export const add_message = `
     WITH new_msg AS (
         INSERT INTO messages (room_id, sender_id, content)
         VALUES ($1, $2, $3)
-        RETURNING message_id
+        RETURNING msg_id
     )
     UPDATE rooms
-    SET last_msg_ref = new_msg.message_id
+    SET last_msg_ref = new_msg.msg_id       
     FROM new_msg
     WHERE rooms.room_id = $1
-    RETURNING new_msg.message_id;
+    RETURNING new_msg.msg_id;
 `
 
 
 export const delete_message = `
     UPDATE messages
     SET is_deleted = TRUE
-    WHERE message_id = $1 AND sender_id = $2
-    RETURNING message_id;
+    WHERE msg_id = $1 AND sender_id = $2
+    RETURNING msg_id;
 `
 
 export const clear_room = `
     DELETE FROM messages
     WHERE room_id = $1
-    RETURNING message_id;
+    RETURNING msg_id;
 `
