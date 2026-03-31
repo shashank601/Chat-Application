@@ -100,7 +100,7 @@ export const promote_to_admin = `
 
 
 //========[ sidebar ]========
-export const search_users = `
+export const search_user = `
     SELECT user_id, username, email
     FROM users
     WHERE username ILIKE $1
@@ -146,11 +146,12 @@ export const check_user_exists = `
 `
 
 export const check_pair_exists = `
-    SELECT r.room_id
-    FROM rooms r
-    JOIN members m1 ON r.room_id = m1.room_id AND m1.user_id = $1
-    JOIN members m2 ON r.room_id = m2.room_id AND m2.user_id = $2
-    WHERE r.type = 'direct';
+    SELECT m.room_id
+    FROM members m
+    JOIN rooms r ON m.room_id = r.room_id
+    WHERE r.type = 'direct' AND m.user_id IN ($1, $2)
+    GROUP BY m.room_id
+    HAVING COUNT(DISTINCT m.user_id) = 2;
 `
 
 //========[ messages ]========
