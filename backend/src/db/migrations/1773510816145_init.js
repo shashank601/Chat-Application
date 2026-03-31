@@ -14,6 +14,7 @@ export const up = (pgm) => {
     CREATE TYPE user_role AS ENUM ('admin', 'member');
 
     -- 3. Rooms without last_msg_ref
+    
     CREATE TABLE IF NOT EXISTS rooms (
       room_id SERIAL PRIMARY KEY,
       type room_type DEFAULT 'direct',

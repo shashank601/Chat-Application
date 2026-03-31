@@ -1,5 +1,5 @@
 import { async_handler } from "../middlewares/async_handler.js";
-import { create_room_query, check_user_exists, add_member, check_pair_exists } from "../db/queries.js";
+import { create_room_query, check_user_exists, add_member, check_pair_exists, get_my_rooms as get_my_rooms_query } from "../db/queries.js";
 import { pool } from "../config/db.js";
 
 
@@ -52,3 +52,10 @@ export const create_room = async_handler(async (req, res) => {
 });
 
 
+
+export const get_my_rooms = async_handler(async (req, res) => {
+    const user_id = req.user.id;
+    
+    const { rows: rooms } = await pool.query(get_my_rooms_query, [user_id]);
+    res.status(200).json(rooms);
+});
