@@ -10,7 +10,7 @@ import {
 
 export const get_messages = async_handler(async (req, res) => {
     const room_id = req.params.room_id;
-    const user_id = req.user.id;
+    const user_id = req.user_id;
     if (!room_id) {
         const err = new Error('Room ID is required');
         err.code = 400;
@@ -57,7 +57,7 @@ export const add_message = async_handler(async (req, res) => {
 
 export const delete_message = async_handler(async (req, res) => {
     const message_id = req.params.message_id;
-    const user_id = req.user.id;
+    const user_id = req.user_id;
     
     if (!message_id || !user_id) {
         const err = new Error('Message ID and User ID are required');
@@ -79,7 +79,7 @@ export const delete_message = async_handler(async (req, res) => {
 
 export const clear_room = async_handler(async (req, res) => {
     const room_id = req.params.room_id;
-    const user_id = req.user.id;
+    const user_id = req.user_id;
     
     if (!room_id || !user_id) {
         const err = new Error('Room ID and User ID are required');

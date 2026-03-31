@@ -1,6 +1,6 @@
 import { async_handler } from "../middlewares/async_handler.js";
 import { 
-    create_room_query, 
+    create_room as create_room_query, 
     check_user_exists as check_user_exists_query, 
     add_member as add_member_query, 
     check_pair_exists, 
@@ -18,7 +18,7 @@ import { pool } from "../config/db.js";
 export const create_room = async_handler(async (req, res) => {
     
     const { receiver_id, group_name } = req.body; 
-    const user_id = req.user.id;
+    const user_id = req.user_id;
     
    
     if (receiver_id) {
@@ -26,7 +26,7 @@ export const create_room = async_handler(async (req, res) => {
         
         if (!user) {
             const err = new Error('User not found');
-            err.statusCode = 404;
+            err.code = 404;
             throw err;
         }
 
@@ -38,7 +38,7 @@ export const create_room = async_handler(async (req, res) => {
 
     if (!receiver_id && !group_name) {
         const err = new Error('Group name is required for group chat');
-        err.statusCode = 400;
+        err.code = 400;
         throw err;
     }
 
@@ -61,7 +61,7 @@ export const create_room = async_handler(async (req, res) => {
 
     } catch (err) {
         await client.query('ROLLBACK');
-        err.statusCode = 500;
+        err.code = 500;
         err.message = 'Failed to create room';
         throw err; 
     } finally {
@@ -74,10 +74,10 @@ export const create_room = async_handler(async (req, res) => {
 
 export const delete_room = async_handler(async (req, res) => {
     const room_id = req.params.room_id;
-    const user_id = req.user.id;
+    const user_id = req.user_id;
     if (!room_id) {
         const err = new Error('Room ID is required');
-        err.statusCode = 400;
+        err.code = 400;
         throw err;
     }
 
@@ -85,10 +85,15 @@ export const delete_room = async_handler(async (req, res) => {
 
     if (!member) {
         const err = new Error('You are not a member of this room');
-        err.statusCode = 403;
+        err.code = 403;
         throw err;
     }
     const { rows: [room] } = await pool.query(get_room_query, [room_id]);
+    if (!room) {
+        const err = new Error('Room not found');
+        err.code = 404;
+        throw err;
+    }
     
     if (room.type === 'direct') {
 
@@ -98,7 +103,7 @@ export const delete_room = async_handler(async (req, res) => {
         const { rows: admin_row} = await pool.query(check_admin_query, [room_id, user_id]);
         if (admin_row.length === 0) {
             const err = new Error('Only admins can delete group rooms');
-            err.statusCode = 403;
+            err.code = 403;
             throw err;
         }
         
@@ -113,7 +118,7 @@ export const delete_room = async_handler(async (req, res) => {
 
 
 export const get_my_rooms = async_handler(async (req, res) => {
-    const user_id = req.user.id;
+    const user_id = req.user_id;
     
     const { rows: rooms } = await pool.query(get_my_rooms_query, [user_id]);
     res.status(200).json(rooms);
@@ -122,12 +127,12 @@ export const get_my_rooms = async_handler(async (req, res) => {
 
 export const get_room_members = async_handler(async (req, res) => {
     const room_id = req.params.room_id;
-    const user_id = req.user.id;
+    const user_id = req.user_id;
     const check_user_in_room = await pool.query(is_user_in_room_query, [room_id, user_id]);
     
     if (check_user_in_room.rows.length === 0) {
         const err = new Error('You are not a member of this room');
-        err.statusCode = 403;
+        err.code = 403;
         throw err;
     }
 

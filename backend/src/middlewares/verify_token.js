@@ -11,7 +11,7 @@ export default function verifyToken(req, res, next) {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    req.user.id = decoded.user_id; // { userId, email } so now we will remove userID headache from frontend  now browser only need to send a jwt 
+    req.user_id = decoded.user_id; // { userId, email } so now we will remove userID headache from frontend  now browser only need to send a jwt 
 
     next();
   } catch (err) {
