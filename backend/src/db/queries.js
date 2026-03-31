@@ -161,14 +161,14 @@ export const get_messages = `
         m.room_id,
         u.username AS sender_name,
         m.content,
-        m.created_at,
-        m.updated_at
+        m.created_at
+
     FROM messages m
     JOIN users u ON m.sender_id = u.user_id
     WHERE m.room_id = $1 AND m.is_deleted = FALSE
     ORDER BY m.created_at ASC;
 `
-
+ 
 export const add_message = `
     WITH new_msg AS (
         INSERT INTO messages (room_id, sender_id, content)
