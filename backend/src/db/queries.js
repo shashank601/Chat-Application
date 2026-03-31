@@ -36,6 +36,15 @@ export const get_room = `
 `
 
 
+export const check_admin = `
+    SELECT user_id
+    FROM members
+    WHERE room_id = $1
+    AND user_id = $2
+    AND role = 'admin';
+`
+
+
 export const add_member = `
     INSERT INTO members (room_id, user_id, role) 
     VALUES ($1, $2, $3)
