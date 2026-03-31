@@ -29,7 +29,11 @@ export const delete_group_room = `
     WHERE room_id = $1 AND type = 'group'
     RETURNING room_id;
 `
-
+export const get_room = `
+    SELECT room_id, type, room_name
+    FROM rooms
+    WHERE room_id = $1;
+`
 
 
 export const add_member = `
