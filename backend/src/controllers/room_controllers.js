@@ -13,7 +13,7 @@ import { pool } from "../config/db.js";
 
 export const create_room = async_handler(async (req, res) => {
     
-    const { receiver_id } = req.body; 
+    const { receiver_id, group_name } = req.body; 
     const user_id = req.user.id;
     
    
@@ -32,12 +32,18 @@ export const create_room = async_handler(async (req, res) => {
         }
     }
 
+    if (!receiver_id && !group_name) {
+        const err = new Error('Group name is required for group chat');
+        err.statusCode = 400;
+        throw err;
+    }
+
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
 
         const roomType = receiver_id ? 'direct' : 'group';
-        const { rows: [room] } = await client.query(create_room_query, [roomType, null]);
+        const { rows: [room] } = await client.query(create_room_query, [roomType, receiver_id ? null : group_name]);
 
         // Add creator
         await client.query(add_member_query, [room.room_id, user_id, receiver_id ? 'member' : 'admin']);
