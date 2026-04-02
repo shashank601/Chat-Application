@@ -3,7 +3,9 @@ import {
     search_user as search_user_query, 
     add_member as add_member_query,
     check_admin as check_admin_query,
-    get_room as get_room_query
+    get_room as get_room_query,
+    leave_room as leave_group_query,
+    promote_to_admin as promote_to_admin_query
 } from "../db/queries.js";
 import { async_handler } from "../middlewares/async_handler.js";
 
@@ -28,7 +30,7 @@ export const search_users = async_handler(async (req, res) => {
 
 // TO DO:
 
-// remove member from group,
+
 // leave group,
 // promote member to admin,
 
@@ -47,7 +49,7 @@ export const add_member_to_group = async_handler(async (req, res) => {
         err.code = 400;
         throw err;
     }
-    
+
     const {rows: room_exists} = await pool.query(get_room_query, [room_id]);
     if (!room_exists.length || room_exists[0].type !== 'group') {
         const err = new Error("Room not found or is not a group");
@@ -89,6 +91,81 @@ export const add_member_to_group = async_handler(async (req, res) => {
     res.status(201).json({
         success: true,
         data: result
+    });
+    
+});
+
+
+
+export const leave_group = async_handler(async (req, res) => {
+    const user_id = req.user_id;
+    const { room_id } = req.body;
+
+    if (!room_id) {
+        const err = new Error("Room ID is required");
+        err.code = 400;
+        throw err;
+    }
+
+    const { rows: room_exists } = await pool.query(get_room_query, [room_id]);
+    if (!room_exists.length || room_exists[0].type !== 'group') {
+        const err = new Error("Room not found or is not a group");
+        err.code = 404;
+        throw err;
+    }
+
+    const { rows: result_rows } = await pool.query(leave_group_query, [room_id, user_id]);
+
+    if (!result_rows.length) {
+        const err = new Error("Admin cannot leave as the last admin");
+        err.code = 403;
+        throw err;
+    }
+
+    res.status(200).json({
+        success: true,
+        data: result_rows
+    });
+});
+
+
+export const promote_to_admin = async_handler(async (req, res) => {
+    const user_id = req.user_id;
+    const { room_id, member_id } = req.body;
+    if (!room_id || !member_id) {
+        const err = new Error("Room ID and member ID are required");
+        err.code = 400;
+        throw err;
+    }
+
+    if (user_id === member_id) {
+        const err = new Error("You cannot promote yourself to admin");
+        err.code = 400;
+        throw err;
+    }
+
+    const {rows: room_exists} = await pool.query(get_room_query, [room_id]);
+    if (!room_exists.length || room_exists[0].type !== 'group') {
+        const err = new Error("Room not found or is not a group");
+        err.code = 404;
+        throw err;
+    }
+    
+    const {rows: admin_exists} = await pool.query(check_admin_query, [room_id, user_id]);
+    if (!admin_exists.length) {
+        const err = new Error("You are not an admin of this room");
+        err.code = 403;
+        throw err;
+    }
+    
+    
+    const {rows: result_rows} = await pool.query(promote_to_admin_query, [room_id, member_id]);
+
+    
+
+    res.status(200).json({
+        success: true,
+        data: result_rows
     });
     
 });
