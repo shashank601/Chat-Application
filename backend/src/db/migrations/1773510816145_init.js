@@ -34,6 +34,7 @@ export const up = (pgm) => {
     -- 5. Alter rooms to add last_msg_ref FK due to circular dependency we add this column after creating messages table
     ALTER TABLE rooms
     ADD COLUMN last_msg_ref INT;
+    
     ALTER TABLE rooms
     ADD CONSTRAINT fk_last_msg
     FOREIGN KEY (last_msg_ref) REFERENCES messages(msg_id) ON DELETE SET NULL;

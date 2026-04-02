@@ -28,16 +28,12 @@ export const search_users = async_handler(async (req, res) => {
 });
 
 
-// TO DO:
 
-
-// leave group,
-// promote member to admin,
 
 
 export const add_member_to_group = async_handler(async (req, res) => {
     const user_id = req.user_id;
-    const { room_id, member_id } = req.body;
+    const { room_id, member_id } = req.params;
     if (!room_id || !member_id) {
         const err = new Error("Room ID and member ID are required");
         err.code = 400;
@@ -63,9 +59,7 @@ export const add_member_to_group = async_handler(async (req, res) => {
         err.code = 403;
         throw err;
     }
-    
-    
-   
+
     
     let result;
     try {
@@ -99,7 +93,7 @@ export const add_member_to_group = async_handler(async (req, res) => {
 
 export const leave_group = async_handler(async (req, res) => {
     const user_id = req.user_id;
-    const { room_id } = req.body;
+    const { room_id } = req.params;
 
     if (!room_id) {
         const err = new Error("Room ID is required");
@@ -131,7 +125,7 @@ export const leave_group = async_handler(async (req, res) => {
 
 export const promote_to_admin = async_handler(async (req, res) => {
     const user_id = req.user_id;
-    const { room_id, member_id } = req.body;
+    const { room_id, member_id } = req.params;
     if (!room_id || !member_id) {
         const err = new Error("Room ID and member ID are required");
         err.code = 400;

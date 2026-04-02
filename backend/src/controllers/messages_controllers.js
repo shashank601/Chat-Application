@@ -33,7 +33,7 @@ export const get_messages = async_handler(async (req, res) => {
 
 export const add_message = async_handler(async (req, res) => {
     const room_id = req.params.room_id;
-    const sender_id = req.user.id;
+    const sender_id = req.user_id;
     const { content } = req.body;
     
     if (!room_id || !sender_id || !content) {
