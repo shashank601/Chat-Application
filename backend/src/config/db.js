@@ -8,3 +8,4 @@ export const pool = new Pool({
     password: process.env.PGPASSWORD,
     port: process.env.PGPORT ? Number(process.env.PGPORT) : 5432,
 });
+
