@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { pool } from '../config/db.js';
-import { JWT_SECRET, JWT_EXPIRES_IN } from '../config/env.js';
+
 import { async_handler } from '../middlewares/async_handler.js';
 import { 
     login as login_query, 
@@ -34,8 +34,8 @@ export const login = async_handler(async (req, res) => {
 
     const token = jwt.sign(
         { user_id: user.user_id }, 
-        JWT_SECRET, 
-        { expiresIn: JWT_EXPIRES_IN }
+        process.env.JWT_SECRET, 
+        { expiresIn: process.env.JWT_EXPIRES_IN }
     );
 
     res.status(200).json({ token });
@@ -68,8 +68,8 @@ export const register = async_handler(async (req, res) => {
     const user = result.rows[0];
     const token = jwt.sign(
         { user_id: user.user_id }, 
-        JWT_SECRET, 
-        { expiresIn: JWT_EXPIRES_IN }
+        process.env.JWT_SECRET, 
+        { expiresIn: process.env.JWT_EXPIRES_IN }
     );
 
     res.status(201).json({ token });
