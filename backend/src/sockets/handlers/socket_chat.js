@@ -1,10 +1,8 @@
 import { 
-    is_user_in_room, 
-    add_message, 
-    delete_message, 
-    clear_room 
+    is_user_in_room as is_user_in_room_query, 
 } from "../../db/queries.js";
 import { pool } from "../../config/db.js";
+import { delete_message_service, clear_room_service } from "../../services/messages_service.js";
 
 
 export const socket_chat = (socket) => {
@@ -15,7 +13,7 @@ export const socket_chat = (socket) => {
         if (!room_id || typeof room_id !== "string") return;
 
         try {
-            const { rows: [row] } = await pool.query(is_user_in_room, [user_id, room_id]);
+            const { rows: [row] } = await pool.query(is_user_in_room_query, [room_id, user_id]);
             
             if (!row) {
                 return socket.emit("error", { type: "join_room", message: "Not allowed in this room" });
@@ -41,7 +39,7 @@ export const socket_chat = (socket) => {
         try {
            const { rows: message_id } = await pool.query(add_message_query, [room_id, user_id, msg]);
            
-           io.to(room_id).emit("receive_message", message_id[0]);
+           socket.to(room_id).emit("receive_message", message_id[0]);
             
         } catch (error) {
             return socket.emit("error", {type: "send_message", message: "Server error"});
@@ -51,13 +49,13 @@ export const socket_chat = (socket) => {
 
     socket.on("delete_message", async (message_id) => {
         try {
-            const { rows: message } = await pool.query(delete_message, [message_id, user_id]);
-
+            let message = await delete_message_service(message_id, user_id);
+            
             if (message.length === 0) {
                 return socket.emit("error", {type: "delete_message", message: "Message not found"});
             }
 
-            io.to(room_id).emit("message_deleted", message_id[0]);
+            socket.to(room_id).emit("message_deleted", message_id);
             
         } catch (error) {
             return socket.emit("error", {type: "delete_message", message: "Server error"});
@@ -65,21 +63,35 @@ export const socket_chat = (socket) => {
     });
 
 
-    socket.on("clear_room", async () => {
+    socket.on("clear_room", async (room_id) => {
         try {
             
-            const { rows: [row] } = await pool.query(is_user_in_room, [user_id, room_id]);
+            let row = await clear_room_service(room_id, user_id);
             
             if (!row) {
                 return socket.emit("error", { type: "join_room", message: "Not allowed in this room" });
             }
 
-            const { rows: messages } = await pool.query(clear_room, [room_id]);
+            const { rows: messages } = await pool.query(clear_room_query, [room_id]);
             
-            io.to(room_id).emit("room_cleared", messages);
+            socket.to(room_id).emit("room_cleared", messages);
             
         } catch (error) {
             return socket.emit("error", {type: "clear_room", message: "Server error"});
+        }
+    });
+
+
+
+    socket.on("leave_room", async (room_id) => {
+        if (!room_id || typeof room_id !== "string") return;
+
+        try {
+            let result = await leave_room_service(room_id, user_id);
+            socket.leave(room_id);
+            socket.emit("room_left", result);
+        } catch (error) {
+            return socket.emit("error", { type: "leave_room", message: "Server error" });
         }
     });
 }

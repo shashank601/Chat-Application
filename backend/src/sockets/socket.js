@@ -10,12 +10,13 @@ export const init_sockets = (io) => {
 
     // all below runs per event
     io.on("connection", (socket) => {
+        console.log("User connected", socket.id, "User ID:", socket.user_id);
         
+        socket_chat(socket);
 
-
-
-
-        socket.disconnect(true);
+        socket.on("disconnect", () => {
+            console.log("User disconnected", socket.id);
+        });
     });
 
 

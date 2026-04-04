@@ -1,18 +1,12 @@
 import { async_handler } from "../middlewares/async_handler.js";
-import { 
-    create_room as create_room_query, 
-    check_user_exists as check_user_exists_query, 
-    add_member as add_member_query, 
-    check_pair_exists, 
-    get_my_rooms as get_my_rooms_query, 
-    get_room_members as get_room_members_query,
-    is_user_in_room as is_user_in_room_query,
-    delete_direct_room as delete_direct_room_query,
-    delete_group_room as delete_group_room_query,
-    get_room as get_room_query,
-    check_admin as check_admin_query
-} from "../db/queries.js";
 import { pool } from "../config/db.js";
+import { 
+    create_room_service, 
+    get_my_rooms_service, 
+    get_room_members_service,
+    delete_room_service 
+} from "../services/room_services.js";
+
 
 
 export const create_room = async_handler(async (req, res) => {
@@ -20,53 +14,8 @@ export const create_room = async_handler(async (req, res) => {
     const { receiver_id, group_name } = req.body; 
     const user_id = req.user_id;
     
-   
-    if (receiver_id) {
-        const { rows: [user] } = await pool.query(check_user_exists_query, [receiver_id]);
-        
-        if (!user) {
-            const err = new Error('User not found');
-            err.code = 404;
-            throw err;
-        }
-
-        const { rows: [existingPair] } = await pool.query(check_pair_exists, [user_id, receiver_id]);
-        if (existingPair) {
-            return res.status(200).json(existingPair);
-        }
-    }
-
-    if (!receiver_id && !group_name) {
-        const err = new Error('Group name is required for group chat');
-        err.code = 400;
-        throw err;
-    }
-
-    const client = await pool.connect();
-    try {
-        await client.query('BEGIN');
-
-        const roomType = receiver_id ? 'direct' : 'group';
-        const { rows: [room] } = await client.query(create_room_query, [roomType, receiver_id ? null : group_name]);
-
-        // Add creator
-        await client.query(add_member_query, [room.room_id, user_id, receiver_id ? 'member' : 'admin']);
-
-        if (receiver_id) {
-            await client.query(add_member_query, [room.room_id, receiver_id, 'member']);
-        }
-
-        await client.query('COMMIT');
-        res.status(201).json(room);
-
-    } catch (err) {
-        await client.query('ROLLBACK');
-        err.code = 500;
-        err.message = 'Failed to create room';
-        throw err; 
-    } finally {
-        client.release();
-    }
+    const room = await create_room_service(receiver_id, group_name, user_id);
+    res.status(201).json(room);
 });
 
 
@@ -75,40 +24,8 @@ export const create_room = async_handler(async (req, res) => {
 export const delete_room = async_handler(async (req, res) => {
     const room_id = req.params.room_id;
     const user_id = req.user_id;
-    if (!room_id) {
-        const err = new Error('Room ID is required');
-        err.code = 400;
-        throw err;
-    }
 
-    const { rows: [member] } = await pool.query(is_user_in_room_query, [room_id, user_id]);
-
-    if (!member) {
-        const err = new Error('You are not a member of this room');
-        err.code = 403;
-        throw err;
-    }
-    const { rows: [room] } = await pool.query(get_room_query, [room_id]);
-    if (!room) {
-        const err = new Error('Room not found');
-        err.code = 404;
-        throw err;
-    }
-    
-    if (room.type === 'direct') {
-
-        await pool.query(delete_direct_room_query, [room_id]);
-        
-    } else {
-        const { rows: admin_row} = await pool.query(check_admin_query, [room_id, user_id]);
-        if (admin_row.length === 0) {
-            const err = new Error('Only admins can delete group rooms');
-            err.code = 403;
-            throw err;
-        }
-        
-        await pool.query(delete_group_room_query, [room_id]);
-    }
+    await delete_room_service(room_id, user_id);
     
     res.status(200).json({ message: 'Room deleted successfully' });
 });
@@ -120,7 +37,7 @@ export const delete_room = async_handler(async (req, res) => {
 export const get_my_rooms = async_handler(async (req, res) => {
     const user_id = req.user_id;
     
-    const { rows: rooms } = await pool.query(get_my_rooms_query, [user_id]);
+    const rooms = await get_my_rooms_service(user_id);
     res.status(200).json(rooms);
 });
 
@@ -132,14 +49,7 @@ export const get_my_rooms = async_handler(async (req, res) => {
 export const get_room_members = async_handler(async (req, res) => {
     const room_id = req.params.room_id;
     const user_id = req.user_id;
-    const check_user_in_room = await pool.query(is_user_in_room_query, [room_id, user_id]);
-    
-    if (check_user_in_room.rows.length === 0) {
-        const err = new Error('You are not a member of this room');
-        err.code = 403;
-        throw err;
-    }
-
-    const { rows: members } = await pool.query(get_room_members_query, [room_id]);
+  
+    const members = await get_room_members_service(room_id, user_id);
     res.status(200).json(members);
 });
