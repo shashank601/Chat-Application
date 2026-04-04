@@ -56,7 +56,8 @@ if (missing.length > 0) {
         const io = new Server(httpServer, {
         cors: {
             origin: process.env.CLIENT_URL,
-            methods: ["GET", "POST"]
+            methods: ["GET", "POST"],
+            credentials: true
         }
         });
     
