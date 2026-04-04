@@ -98,18 +98,6 @@ export const promote_to_admin = `
     RETURNING user_id;
 `
 
-// export const check_room_type = `      DB will enforce rule, no pre-check in backend
-//     SELECT type 
-//     FROM rooms 
-//     WHERE room_id = $1;
-// `
-
-
-// export const check_role = `       instead of checking role on each add member request, we will assign role using jwt token
-//     SELECT role 
-//     FROM room_members 
-//     WHERE room_id = $1 AND user_id = $2;
-// `
 
 
 //========[ sidebar ]========
