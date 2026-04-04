@@ -3,12 +3,12 @@ import {
     get_room as get_room_query, 
     check_admin as check_admin_query, 
     add_member as add_member_query, 
-    leave_group as leave_group_query,
+    leave_room as leave_group_query,
     promote_to_admin as promote_to_admin_query,
     search_user as search_user_query
 } from "../db/queries.js";
 
-export const search_users_service = async (q, user_id) => {
+export const search_users_service = async (q, user_id) => { 
     if (!q || !q.trim()) {
         const err = new Error("Query parameter 'q' is required");
         err.code = 400;

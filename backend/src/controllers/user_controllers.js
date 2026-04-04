@@ -27,7 +27,7 @@ export const search_users = async_handler(async (req, res) => {
 export const add_member_to_group = async_handler(async (req, res) => {
     const user_id = req.user_id;
     const { room_id, member_id } = req.params;
-    let result = await add_member_to_group_service(room_id, member_id, user_id);
+    let result = await add_member_to_group_service(user_id, room_id, member_id);
 
     res.status(201).json({
         success: true,
