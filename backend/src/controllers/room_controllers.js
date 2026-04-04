@@ -15,7 +15,10 @@ export const create_room = async_handler(async (req, res) => {
     const user_id = req.user_id;
     
     const room = await create_room_service(receiver_id, group_name, user_id);
-    res.status(201).json(room);
+    res.status(201).json({
+        success: true,
+        data: room
+    });
 });
 
 
@@ -27,7 +30,10 @@ export const delete_room = async_handler(async (req, res) => {
 
     await delete_room_service(room_id, user_id);
     
-    res.status(200).json({ message: 'Room deleted successfully' });
+    res.status(200).json({
+        success: true,
+        message: 'Room deleted successfully'
+    });
 });
 
 
@@ -38,7 +44,10 @@ export const get_my_rooms = async_handler(async (req, res) => {
     const user_id = req.user_id;
     
     const rooms = await get_my_rooms_service(user_id);
-    res.status(200).json(rooms);
+    res.status(200).json({
+        success: true,
+        data: rooms
+    });
 });
 
 
@@ -51,5 +60,8 @@ export const get_room_members = async_handler(async (req, res) => {
     const user_id = req.user_id;
   
     const members = await get_room_members_service(room_id, user_id);
-    res.status(200).json(members);
+    res.status(200).json({
+        success: true,
+        data: members
+    });
 });

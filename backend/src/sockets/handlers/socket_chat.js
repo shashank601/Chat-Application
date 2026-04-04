@@ -1,8 +1,13 @@
-import { 
-    is_user_in_room as is_user_in_room_query, 
-} from "../../db/queries.js";
 import { pool } from "../../config/db.js";
-import { delete_message_service, clear_room_service } from "../../services/messages_service.js";
+import { 
+    delete_message_service, 
+    clear_room_service, 
+    add_message_service 
+} from "../../services/messages_service.js";
+import { 
+    leave_room_service, 
+    is_user_in_room_service 
+} from "../../services/room_services.js";
 
 
 export const socket_chat = (socket) => {
@@ -13,7 +18,7 @@ export const socket_chat = (socket) => {
         if (!room_id || typeof room_id !== "string") return;
 
         try {
-            const { rows: [row] } = await pool.query(is_user_in_room_query, [room_id, user_id]);
+            const row = await is_user_in_room_service(room_id, user_id);
             
             if (!row) {
                 return socket.emit("error", { type: "join_room", message: "Not allowed in this room" });
@@ -37,7 +42,7 @@ export const socket_chat = (socket) => {
         }
         
         try {
-           const { rows: message_id } = await pool.query(add_message_query, [room_id, user_id, msg]);
+           const message_id = await add_message_service(room_id, user_id, msg);
            
            socket.to(room_id).emit("receive_message", message_id[0]);
             
@@ -47,14 +52,21 @@ export const socket_chat = (socket) => {
         
     });
 
-    socket.on("delete_message", async (message_id) => {
+    socket.on("delete_message", async (room_id, message_id) => {
         try {
+            const is_user_in_room = await is_user_in_room_service(room_id, user_id);
+            
+            if (!is_user_in_room) {
+                return socket.emit("error", {type: "delete_message", message: "Not allowed in this room"});
+            }
+
             let message = await delete_message_service(message_id, user_id);
             
-            if (message.length === 0) {
+            if (!message || message.length === 0) {
                 return socket.emit("error", {type: "delete_message", message: "Message not found"});
             }
 
+            
             socket.to(room_id).emit("message_deleted", message_id);
             
         } catch (error) {
@@ -69,12 +81,10 @@ export const socket_chat = (socket) => {
             let row = await clear_room_service(room_id, user_id);
             
             if (!row) {
-                return socket.emit("error", { type: "join_room", message: "Not allowed in this room" });
+                return socket.emit("error", { type: "clear_room", message: "Not allowed in this room" });
             }
-
-            const { rows: messages } = await pool.query(clear_room_query, [room_id]);
             
-            socket.to(room_id).emit("room_cleared", messages);
+            socket.to(room_id).emit("room_cleared", row);
             
         } catch (error) {
             return socket.emit("error", {type: "clear_room", message: "Server error"});

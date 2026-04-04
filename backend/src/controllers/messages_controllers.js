@@ -12,7 +12,10 @@ export const get_messages = async_handler(async (req, res) => {
     
     const messages = await get_messages_service(room_id, user_id);
     
-    res.status(200).json(messages);
+    res.status(200).json({
+        success: true,
+        data: messages
+    });
 });
 
 
@@ -23,7 +26,10 @@ export const add_message = async_handler(async (req, res) => {
     const { content } = req.body;
     
     const message_id = await add_message_service(room_id, sender_id, content);
-    res.status(201).json(message_id);
+    res.status(201).json({
+        success: true,
+        data: message_id
+    });
 });
 
 
@@ -32,7 +38,10 @@ export const delete_message = async_handler(async (req, res) => {
     const user_id = req.user_id;
     await delete_message_service(message_id, user_id);
     
-    res.status(200).json({ message: 'Message deleted successfully' });
+    res.status(200).json({
+        success: true,
+        message: 'Message deleted successfully'
+    });
 });
 
 
@@ -42,6 +51,8 @@ export const clear_room = async_handler(async (req, res) => {
     
     await clear_room_service(room_id, user_id);
   
-    
-    res.status(200).json({ message: 'Room cleared successfully' });
+    res.status(200).json({
+        success: true,
+        message: 'Room cleared successfully'
+    });
 });

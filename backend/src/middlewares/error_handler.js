@@ -4,5 +4,8 @@ export default function error_handler(err, req, res, next) {
     const status = err.code ?? 500;
     const message = err.message ?? 'Something went wrong';
 
-    res.status(status).json({ error: message });
+    res.status(status).json({ 
+        success: false,
+        error: message 
+    });
 };

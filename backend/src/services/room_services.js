@@ -121,3 +121,9 @@ export const get_room_members_service = async (room_id, user_id) => {
     const { rows: members } = await pool.query(get_room_members_query, [room_id]);
     return members;
 }
+
+export const is_user_in_room_service = async (room_id, user_id) => {
+    
+    const result = await pool.query(is_user_in_room_query, [room_id, user_id]);
+    return result.rows[0] || null;
+}
