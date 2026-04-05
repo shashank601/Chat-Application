@@ -8,6 +8,12 @@ import {
     register as register_query 
 } from '../db/queries.js'
 
+
+
+
+
+
+
 export const login = async_handler(async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -76,3 +82,8 @@ export const register = async_handler(async (req, res) => {
     
     
 });
+
+
+export const verify = (req, res) => {
+    res.json({ id: req.user.userId });
+}

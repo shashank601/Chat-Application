@@ -3,7 +3,7 @@ import auth_routes from './auth_routes.js';
 import messages_routes from './messages_routes.js';
 import room_routes from './room_routes.js';
 import user_routes from './user_routes.js';
-import verify_token from '../middlewares/verify_token.js';
+import { verify_token } from '../middlewares/auth_middleware.js';
 
 const router = express.Router();
 
