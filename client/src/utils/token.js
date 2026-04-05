@@ -11,3 +11,6 @@ export const setToken = (token) => {
 export const clearToken = () => {
   localStorage.removeItem(TOKEN_KEY);
 };
+
+
+// TODO: change this to use cookies instead of local storage when deploying to production
