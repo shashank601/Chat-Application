@@ -12,3 +12,7 @@ export const Signup = ({username, email, password}) => {
     const credentials = {name: username, email, password};
     return api.post('/auth/register', credentials); // {id, username, email} or error
 }
+
+export const Verify = () => {
+    return api.get('/auth/verify'); // {id, username, email} or error
+}
