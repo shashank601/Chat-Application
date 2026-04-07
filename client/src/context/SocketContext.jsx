@@ -37,7 +37,8 @@ export const SocketProvider = ({ children }) => {
   );
 };
 
-// custom hook
+
+
 export const useSocket = () => {
   const socket = useContext(SocketContext);
 
