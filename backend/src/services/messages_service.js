@@ -29,7 +29,7 @@ const delete_message_service = async (message_id, user_id) => {
 
 
 
-const add_message_service = async (room_id, sender_id, content) => {
+export const add_message_service = async (room_id, sender_id, content) => {
         
     if (!room_id || !sender_id || !content) {
         const err = new Error('Room ID, User ID and content are required');
@@ -53,7 +53,7 @@ const add_message_service = async (room_id, sender_id, content) => {
 
 
 
-const clear_room_service = async (room_id, user_id) => {
+export const clear_room_service = async (room_id, user_id) => {
     if (!room_id || !user_id) {
         const err = new Error('Room ID and User ID are required');
         err.code = 400;
@@ -74,7 +74,7 @@ const clear_room_service = async (room_id, user_id) => {
 
 
 
-const get_messages_service = async (room_id, user_id) => {
+export const get_messages_service = async (room_id, user_id) => {
     if (!room_id) {
         const err = new Error('Room ID is required');
         err.code = 400;
