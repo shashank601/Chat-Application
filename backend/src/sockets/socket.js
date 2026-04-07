@@ -12,7 +12,7 @@ export const init_sockets = (io) => {
     io.on("connection", (socket) => {
         console.log("User connected", socket.id, "User ID:", socket.user_id);
         
-        socket_chat(socket);
+        socket_chat(socket, io);
 
         socket.on("disconnect", () => {
             console.log("User disconnected", socket.id);

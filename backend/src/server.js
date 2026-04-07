@@ -13,87 +13,88 @@ import { pool } from './config/db.js';
 dotenv.config();
 const app = express();
 
+const httpServer = http.createServer(app);
+
+const io = new Server(httpServer, {
+  cors: {
+    origin: process.env.CLIENT_URL,
+    methods: ["GET", "POST"],
+    credentials: true,
+  }
+});
+
+init_sockets(io);
+
 app.use(express.json());
 app.use(cookie_parser());
 app.use(cors({
-    origin: process.env.CLIENT_URL || true,
-    credentials: true
+  origin: process.env.CLIENT_URL || true,
+  credentials: true
 }));
 
-
 app.get('/health', (_, res) => {
-    res.send('OK');
+  res.send('OK');
 });
+
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
 app.use('/api', index_routes);
 app.use(error_handler);
 
 const requiredEnv = [
-    "PORT",
-    "JWT_SECRET",
-    "CLIENT_URL",
-    "JWT_EXPIRES_IN",
-    "PGHOST",
-    "PGPORT",
-    "PGUSER",
-    "PGPASSWORD",
-    "PGDATABASE"
+  "PORT",
+  "JWT_SECRET",
+  "CLIENT_URL",
+  "JWT_EXPIRES_IN",
+  "PGHOST",
+  "PGPORT",
+  "PGUSER",
+  "PGPASSWORD",
+  "PGDATABASE"
 ];
 
 const missing = requiredEnv.filter(key => !process.env[key]);
 
 if (missing.length > 0) {
-    console.error("Missing env vars:", missing);
-    process.exit(1);
+  console.error("Missing env vars:", missing);
+  process.exit(1);
 }
 
+(async () => {
+  try {
+    await connect_db();
 
+    const PORT = process.env.PORT || 3000;
 
-( async () => {
-    try {
-        await connect_db();
-        const httpServer = http.createServer(app);
-    
-        const io = new Server(httpServer, {
-        cors: {
-            origin: process.env.CLIENT_URL,
-            methods: ["GET", "POST"],
-            credentials: true,
-        }
-        });
-    
-        init_sockets(io);
-    
-        const PORT = process.env.PORT || 3000
-    
-        httpServer.listen(PORT, () => {
-            console.log(`Server started on port ${PORT}`);
-        });
-        
-        
-        const shutdown = async () => {
-            console.log("Shutting down...");
+    httpServer.listen(PORT, () => {
+      console.log(`Server started on port ${PORT}`);
+    });
 
-            await pool.end();
-            io.close();
+    const shutdown = async () => {
+      console.log("Shutting down...");
 
-            httpServer.close(() => {
-                console.log("Server closed");
-                process.exit(0);
-            });
+      await pool.end();
+      io.close();
 
-            setTimeout(() => {    // force exit after 5sec
-                console.error("Force shutdown");
-                process.exit(1);
-            }, 5000);
-        };
+      httpServer.close(() => {
+        console.log("Server closed");
+        process.exit(0);
+      });
 
-        process.on("SIGINT", shutdown);   // ctrl+c
-        process.on("SIGTERM", shutdown);  // production
-    
-    } catch (error) {
-        console.error("Failed to start server:", error);
+      setTimeout(() => {
+        console.error("Force shutdown");
         process.exit(1);
-    }
+      }, 5000);
+    };
 
+    process.on("SIGINT", shutdown);
+    process.on("SIGTERM", shutdown);
+
+  } catch (error) {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  }
 })();
-

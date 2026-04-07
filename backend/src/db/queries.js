@@ -180,7 +180,7 @@ export const add_message = `
     SET last_msg_ref = new_msg.msg_id       
     FROM new_msg
     WHERE rooms.room_id = $1
-    RETURNING new_msg.msg_id;
+    RETURNING *;
 `
 
 
