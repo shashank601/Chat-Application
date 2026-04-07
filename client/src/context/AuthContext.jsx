@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { getToken, clearToken } from "../utils/Token.js";
+import { getToken, clearToken, setToken } from "../utils/Token.js";
 import { useNavigate } from "react-router-dom";
 import { Verify } from "../services/AuthService.js";
 
@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    setToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE3NzU1NDgwNjIsImV4cCI6MTc3NjE1Mjg2Mn0.tajJL2zOsIaqWKsOAf5za1ECQPk2TdsLQTVTRtMgQtY");
     const token = getToken();
 
     if (token) {

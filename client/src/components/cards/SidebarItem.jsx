@@ -1,4 +1,4 @@
-export default function ChatPanel() {
+export default function SidebarItem({ room }) {
     return (
         <div>
             

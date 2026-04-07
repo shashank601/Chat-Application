@@ -9,7 +9,7 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     
-    socketRef.current = io("http://localhost:3000", {
+    socketRef.current = io("http://localhost:5000", {
       auth: {
         token: getToken()
       }

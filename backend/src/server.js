@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 app.use(cookie_parser());
 app.use(cors({
-    origin: process.env.CLIENT_URL,
+    origin: process.env.CLIENT_URL || true,
     credentials: true
 }));
 
@@ -57,7 +57,7 @@ if (missing.length > 0) {
         cors: {
             origin: process.env.CLIENT_URL,
             methods: ["GET", "POST"],
-            credentials: true
+            credentials: true,
         }
         });
     
