@@ -5,13 +5,14 @@ export const createSocketAPI = (socket) => {
     }
     
   return {
+    onMessage: (handler) => {
+      socket.on("receive_message", handler);
+    },
+
     sendMessage: (data) => {
       socket.emit("send_message", data);
     },
 
-    onMessage: (handler) => {
-      socket.on("receive_message", handler);
-    },
 
     offMessage: (handler) => {
       socket.off("receive_message", handler);
