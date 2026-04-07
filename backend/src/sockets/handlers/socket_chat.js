@@ -44,7 +44,8 @@ export const socket_chat = (socket) => {
         try {
            const message_id = await add_message_service(room_id, user_id, msg);
            
-           socket.to(room_id).emit("receive_message", message_id[0]);
+           // emit to all users in the room
+           io.in(room_id).emit("receive_message", message_id[0]);
             
         } catch (error) {
             return socket.emit("error", {type: "send_message", message: "Server error"});
