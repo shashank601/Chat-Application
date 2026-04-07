@@ -3,6 +3,7 @@ import { useState } from "react";
 
 export default function DropDown({ searchResults }) {
     const [loading, setLoading] = useState(true);
+    
 
 
     const addFriendHandler = async (userId) => {

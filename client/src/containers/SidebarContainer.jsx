@@ -4,10 +4,12 @@ import Searchbar from "../components/searchbar.jsx";
 import SidebarItem from "../components/cards/SidebarItem.jsx";
 import { mapRoom } from "../mapper/mapGetRoom.js";
 import { useSocket } from "../context/SocketContext.jsx";
+import { useNavigate } from "react-router-dom";
 
 export default function SidebarContainer() {
-  const [selectedRoomId, setSelectedRoomId] = useState(null);
+  // const [selectedRoomId, setSelectedRoomId] = useState(null);
   const { onReceiveMessage, onRoomCreated, onRoomDeleted } = useSocket();
+  const navigate = useNavigate();
 
   const [rooms, setRooms] = useState([]);
 
@@ -81,7 +83,7 @@ export default function SidebarContainer() {
 
       <div className="flex-1 overflow-y-auto pt-4">
         {rooms.map((room) => (
-          <SidebarItem key={room.room_id} room={room} />
+          <SidebarItem key={room.room_id} room={room} onClick={() => {navigate(`/chat/${room.room_id}`)}} />
         ))}
       </div>
     </div>

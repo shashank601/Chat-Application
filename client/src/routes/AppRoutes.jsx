@@ -28,7 +28,7 @@ export default function AppRoutes() {
         }
       >
         <Route index element={<Home />} />
-        <Route path="room/:roomId" element={<ChatPanel />} />
+        <Route path=":roomId" element={<ChatPanel />} />
       </Route>
 
 

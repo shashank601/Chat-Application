@@ -16,7 +16,8 @@ export const socket_chat = (socket, io) => {
 
 
 
-  socket.on("join_room", async (room_id) => {
+  socket.on("join_room", async (payload) => {
+    const room_id = typeof payload === "string" ? payload : payload?.room_id;
     if (!room_id || typeof room_id !== "string") return;
 
     try {
