@@ -117,7 +117,6 @@ export const get_my_rooms = `
             ELSE r.room_name
         END AS display_name,
         r.type,
-        r.last_msg_ref,
         m.role,
         msg.content AS last_msg,
         msg.created_at AS last_msg_at
@@ -160,6 +159,7 @@ export const get_messages = `
     SELECT 
         m.msg_id,
         m.room_id,
+        m.sender_id
         u.username AS sender_name,
         m.content,
         m.created_at
