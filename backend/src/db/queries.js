@@ -159,7 +159,7 @@ export const get_messages = `
     SELECT 
         m.msg_id,
         m.room_id,
-        m.sender_id
+        m.sender_id,
         u.username AS sender_name,
         m.content,
         m.created_at

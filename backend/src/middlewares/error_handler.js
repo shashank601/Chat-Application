@@ -5,7 +5,9 @@ export default function error_handler(err, req, res, next) {
         '23505': 409
     };
 
-    const status = dbStatusMap[err.code] ?? 500;
+    const status = Number.isInteger(err.code)
+        ? err.code
+        : (dbStatusMap[err.code] ?? 500);
 
     const message = err.message ?? 'Something went wrong';
 

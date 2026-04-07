@@ -26,8 +26,11 @@ export const create_room_service = async (receiver_id, group_name, user_id) => {
         }
 
         const { rows: [existing_pair] } = await pool.query(check_pair_exists, [user_id, receiver_id]);
+        
         if (existing_pair) {
-            return existing_pair;
+            const { rows: [existing_room] } = await pool.query(get_room_query, [existing_pair.room_id]);
+
+            return existing_room ?? existing_pair;
         }
     }
 

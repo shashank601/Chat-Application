@@ -4,7 +4,7 @@ import {
   clear_room_service,
   add_message_service,
 } from "../../services/messages_service.js";
-import { is_user_in_room_service } from "../../services/room_services.js";
+import { is_user_in_room_service, delete_room_service } from "../../services/room_services.js";
 import { leave_room_service } from "../../services/user_service.js";
 
 

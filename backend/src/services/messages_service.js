@@ -45,8 +45,8 @@ export const add_message_service = async (room_id, sender_id, content) => {
         throw err;
     }
     
-    const { rows: message_id } = await pool.query(add_message_query, [room_id, sender_id, content]);
-    return message_id;
+    const { rows: data } = await pool.query(add_message_query, [room_id, sender_id, content]);
+    return data;
 }
 
 
