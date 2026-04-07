@@ -5,9 +5,11 @@ import {
     add_message_service 
 } from "../../services/messages_service.js";
 import { 
-    leave_room_service, 
     is_user_in_room_service 
 } from "../../services/room_services.js";
+import { 
+    leave_room_service 
+} from "../../services/user_service.js";
 
 
 
@@ -103,7 +105,7 @@ export const socket_chat = (socket) => {
         if (!room_id || typeof room_id !== "string") return;
 
         try {
-            let result = await leave_room_service(room_id, user_id);
+            let result = await leave_room_service(user_id, room_id);
             socket.leave(room_id);
             socket.emit("room_left", result);
         } catch (error) {

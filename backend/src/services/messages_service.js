@@ -7,7 +7,7 @@ import {
     clear_room as clear_room_query 
 } from "../db/queries.js";
 
-const delete_message_service = async (message_id, user_id) => {
+export const delete_message_service = async (message_id, user_id) => {
         
     if (!message_id || !user_id) {
         const err = new Error('Message ID and User ID are required');
