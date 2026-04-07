@@ -1,7 +1,7 @@
 export default function SidebarItem({ room }) {
     return (
         // [{ room_id, display_name, type, role, last_msg, last_msg_at }]
-        <div className="flex flex-col p-2 truncate w-full bg-slate-200 border-b border-slate-300">
+        <div className="flex flex-col p-2 truncate w-full bg-slate-50 border-b border-slate-900">
             <div className="h-10 ">
                 <h2 className="text-lg">{room.display_name}</h2>
             </div>

@@ -16,13 +16,13 @@ export default function DropDown({ searchResults }) {
     return (
 
 
-       <ul>
+       <ul className="overflow-y-auto max-h-60 border-1 border-t-0">
           {searchResults.map((user) => (
             <li key={user.user_id} className="flex justify-between bg-slate-100 border-1 border-r-0 border-t-0">
               {console.log(user)}
               <div className="flex flex-col font-mono px-3">
-                <p>{user.username}</p>
-                <p>{user.email}</p>
+                <p className="w-40 truncate">{user.username}</p>
+                <p className="w-40 truncate">{user.email}</p>
               </div>
               <button 
                 onClick={() => addFriendHandler(user.user_id)}
