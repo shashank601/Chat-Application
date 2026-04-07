@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getMyRooms } from "../../services/RoomService.js";
+import { getMyRooms } from "../services/RoomService.js";
 import { Sidebar } from "../components/sidebar/Sidebar.jsx";
 
 export default function SidebarContainer() {
@@ -16,7 +16,7 @@ export default function SidebarContainer() {
     
     return (
         <div>
-            <Sidebar rooms={rooms} selectedRoomId={selectedRoomId} onSelectedRoomId={setSelectedRoomId} />
+            
         </div>
     )
 }

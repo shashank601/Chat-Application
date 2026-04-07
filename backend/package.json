@@ -4,6 +4,8 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
+    "migrate": "npx node-pg-migrate up",
+    "down": "npx node-pg-migrate down",
     "dev": "nodemon src/server.js"
   },
   "dependencies": {

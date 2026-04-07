@@ -53,6 +53,9 @@ export const up = (pgm) => {
 
 export const down = (pgm) => {
   pgm.sql(`
+    ALTER TABLE rooms DROP CONSTRAINT IF EXISTS fk_last_msg;
+
+
     DROP TABLE IF EXISTS members;
     DROP TABLE IF EXISTS messages;
     DROP TABLE IF EXISTS rooms;
