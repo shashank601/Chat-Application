@@ -28,10 +28,11 @@ export default function SidebarContainer() {
 
   return (
     <div className="flex flex-col min-h-screen ml-10 mr-4">
-      <div className="h-1/5 sticky top-0  bg-slate-50">
+      <div className="h-1/5 sticky top-0  bg-slate-50 pb-3">
         <h1 className="text-2xl font-bold pb-4">Live Chat</h1>
         <Searchbar />
       </div>
+
       <div className="flex-1 overflow-y-auto pt-4">
         {rooms.map((room) => (
           <SidebarItem key={room.room_id} room={room} />
