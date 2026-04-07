@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { getMyRooms } from "../services/RoomService.js";
+import Searchbar from "../components/searchbar.jsx";
 import SidebarItem from "../components/cards/SidebarItem.jsx";
 import { mapRoom } from "../mapper/mapGetRoom.js";
-import Searchbar from "../components/searchbar.jsx";
 
 export default function SidebarContainer() {
   const [selectedRoomId, setSelectedRoomId] = useState(null);
@@ -11,11 +11,13 @@ export default function SidebarContainer() {
   const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
+  
     getMyRooms()
       .then((res) => {
-        const roomsArray = res.data; 
-        if (Array.isArray(roomsArray)) {
-          const normalizedRooms = roomsArray.map(mapRoom);
+
+        const response = res.data;
+        if (Array.isArray(response)) {
+          const normalizedRooms = response.map(mapRoom);
           setRooms(normalizedRooms);
         } else {
           setRooms([]); // fallback if not array
@@ -25,11 +27,11 @@ export default function SidebarContainer() {
   }, []);
 
   return (
-    <div>
-      <div>
+    <div className="flex flex-col min-h-screen ml-10 mr-4">
+      <div className=" h-1/5">
         <Searchbar />
       </div>
-      <div>
+      <div className="flex-1 overflow-y-auto">
         {rooms.map((room) => (
           <SidebarItem key={room.room_id} room={room} />
         ))}
