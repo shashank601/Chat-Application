@@ -9,7 +9,6 @@ export const SocketProvider = ({ children }) => {
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-
     // create an insatnce, donot autoconnect
     socketRef.current = io("http://localhost:5000", { autoConnect: false });
     const s = socketRef.current;
@@ -25,7 +24,6 @@ export const SocketProvider = ({ children }) => {
     s.on("connect", onConnect);
     s.on("disconnect", onDisconnect);
 
-
     return () => {
       s.off("connect", onConnect);
       s.off("disconnect", onDisconnect);
@@ -34,40 +32,34 @@ export const SocketProvider = ({ children }) => {
   }, []);
 
   // Emit functions
-  const joinRoom = (room_id) => socketRef.current?.emit("join_room", room_id);
+  const joinRoom = (room_id) => socketRef.current?.emit("room:join", room_id);
 
   const sendMessage = (room_id, msg) =>
-    socketRef.current?.emit("send_message", { room_id, msg });
-  
+    socketRef.current?.emit("message:send", { room_id, msg });
+
   const deleteMessage = (room_id, message_id) =>
-    socketRef.current?.emit("delete_message", { room_id, message_id });
-  
+    socketRef.current?.emit("message:delete", { room_id, message_id });
+
   const clearRoom = (room_id) =>
-    socketRef.current?.emit("clear_room", room_id);
-  
+    socketRef.current?.emit("room:clear", { room_id });
+
   const leaveRoom = (room_id) =>
-    socketRef.current?.emit("leave_room", room_id);
+    socketRef.current?.emit("room:leave", { room_id });
 
-
-  // listeners regisatration 
+  // listeners regisatration
   const onReceiveMessage = (cb) => {
-    socketRef.current?.on("receive_message", cb);
-    return () => socketRef.current?.off("receive_message", cb);
+    socketRef.current?.on("message:new", cb);
+    return () => socketRef.current?.off("message:new", cb);
   };
 
   const onMessageDeleted = (cb) => {
-    socketRef.current?.on("message_deleted", cb);
-    return () => socketRef.current?.off("message_deleted", cb);
+    socketRef.current?.on("message:deleted", cb);
+    return () => socketRef.current?.off("message:deleted", cb);
   };
 
   const onRoomCleared = (cb) => {
-    socketRef.current?.on("room_cleared", cb);
-    return () => socketRef.current?.off("room_cleared", cb);
-  };
-
-  const onRoomLeft = (cb) => {
-    socketRef.current?.on("room_left", cb);
-    return () => socketRef.current?.off("room_left", cb);
+    socketRef.current?.on("room:cleared", cb);
+    return () => socketRef.current?.off("room:cleared", cb);
   };
 
   const onError = (cb) => {
@@ -75,19 +67,34 @@ export const SocketProvider = ({ children }) => {
     return () => socketRef.current?.off("error", cb);
   };
 
-  // get a room id 
+  // get a room id
   const onRoomCreated = (cb) => {
-    socketRef.current?.on("room_created", cb);
-    return () => socketRef.current?.off("room_created", cb);
+    socketRef.current?.on("room:created", cb);
+    return () => socketRef.current?.off("room:created", cb);
   };
 
   const onRoomDeleted = (cb) => {
-    socketRef.current?.on("room_delete", cb);
-    return () => socketRef.current?.off("room_delete", cb);
+    socketRef.current?.on("room:deleted", cb);
+    return () => socketRef.current?.off("room:deleted", cb);
+  };
+
+  const onMemberAdded = (cb) => {
+    socketRef.current?.on("member:added", cb);
+    return () => socketRef.current?.off("member:added", cb);
+  };
+
+  const onMemberPromoted = (cb) => {
+    socketRef.current?.on("member:promoted", cb);
+    return () => socketRef.current?.off("member:promoted", cb);
+  };
+
+  const onMemberLeft = (cb) => {
+    socketRef.current?.on("member:left", cb);
+    return () => socketRef.current?.off("member:left", cb);
   };
 
   const value = {
-    socket: socketRef.current,
+    socket: socketRef,
     connected,
     joinRoom,
     sendMessage,
@@ -98,13 +105,17 @@ export const SocketProvider = ({ children }) => {
     onReceiveMessage,
     onMessageDeleted,
     onRoomCleared,
-    onRoomLeft,
     onError,
     onRoomCreated,
     onRoomDeleted,
+    onMemberAdded,
+    onMemberPromoted,
+    onMemberLeft,
   };
 
-  return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>;
+  return (
+    <SocketContext.Provider value={value}>{children}</SocketContext.Provider>
+  );
 };
 
 export const useSocket = () => {

@@ -33,7 +33,7 @@ export default function ChatPanel() {
 
     return (
         <div>
-            <h1>hi {roomId}</h1>
+            <h1>room: {roomId}</h1>
             {loading ? <p>Loading...</p> : <p>{JSON.stringify(chatData)}</p>}
         </div>
     )
