@@ -1,8 +1,11 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getMessages } from "../services/MessageService";
+import { mapMessage } from "../mapper/mapGetMessages";
+import { useAuth } from "../context/AuthContext";
 
 export default function ChatPanel() {
+    const { user } = useAuth();
     const [loading, setLoading] = useState(true);
     const [chatData, setChatData] = useState(null);
     
@@ -15,8 +18,9 @@ export default function ChatPanel() {
         const fetchMessages = async () => {
             try {
                 setLoading(true);
-                const data = await getMessages(roomId);
-                if (!isUnmounted) setChatData(data);
+                const res = await getMessages(roomId);
+                if (!isUnmounted) 
+                    setChatData(res.data.map(msg => mapMessage(msg, user.id)));
             } catch (error) {
                 console.error(error);
             } finally {
@@ -34,6 +38,7 @@ export default function ChatPanel() {
     return (
         <div>
             <h1>room: {roomId}</h1>
+            {console.log(chatData)}
             {loading ? <p>Loading...</p> : <p>{JSON.stringify(chatData)}</p>}
         </div>
     )

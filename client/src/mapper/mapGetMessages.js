@@ -1,4 +1,6 @@
-export function mapMessage(raw, currentUserId) {
+
+
+export function mapMessage(raw, userId) {
     return {
         id: raw.msg_id,
         roomId: raw.room_id,
@@ -6,6 +8,6 @@ export function mapMessage(raw, currentUserId) {
         senderName: raw.sender_name,
         content: raw.content ?? "",
         createdAt: new Date(raw.created_at),
-        isMine: raw.sender_id === currentUserId,
+        isMine: Number(raw.sender_id) === Number(userId),
     };
 }
