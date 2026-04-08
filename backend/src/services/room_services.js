@@ -15,7 +15,7 @@ import {
 
 
 export const create_room_service = async (receiver_id, group_name, user_id) => {
-        
+    
     if (receiver_id) {
         const { rows: [user] } = await pool.query(check_user_exists_query, [receiver_id]);
         
@@ -48,7 +48,7 @@ export const create_room_service = async (receiver_id, group_name, user_id) => {
         const { rows: [room] } = await client.query(create_room_query, [roomType, receiver_id ? null : group_name]);
 
         // Add creator
-        await client.query(add_member_query, [room.room_id, user_id, receiver_id ? 'member' : 'admin']);
+        const { rows: [member] } = await client.query(add_member_query, [room.room_id, user_id, receiver_id ? 'member' : 'admin']);
 
         if (receiver_id) {
             await client.query(add_member_query, [room.room_id, receiver_id, 'member']);
@@ -59,8 +59,8 @@ export const create_room_service = async (receiver_id, group_name, user_id) => {
 
     } catch (err) {
         await client.query('ROLLBACK');
-        err.code = 500;
-        err.message = 'Failed to create room';
+        // err.code = 500;
+        // err.message = 'Failed to create room';
         throw err; 
     } finally {
         client.release();

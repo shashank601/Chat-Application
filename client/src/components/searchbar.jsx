@@ -20,7 +20,7 @@ export default function Searchbar() {
   };
 
   return (
-    <div className="flex flex-col relative">
+    <div className="flex flex-col relative ">
       <div className="flex gap-1 items-center border-2 border-zinc-900 bg-slate-100">
         <input
           value={searchQuery}

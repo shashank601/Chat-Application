@@ -1,6 +1,6 @@
 import api from "./Axios.js";
 
-export const createRoom = async (receiver_id, group_name) => {
+export const createRoom = async (receiver_id = null, group_name) => {
     const response = await api.post("/rooms", {
         receiver_id,
         group_name

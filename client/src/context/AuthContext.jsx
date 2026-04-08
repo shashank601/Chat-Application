@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE3NzU1NDgwNjIsImV4cCI6MTc3NjE1Mjg2Mn0.tajJL2zOsIaqWKsOAf5za1ECQPk2TdsLQTVTRtMgQtY");
+    setToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE3NzU2ODAxODUsImV4cCI6MTc3NjI4NDk4NX0.GowoRXAiw00rQrCgaDfNVO875TybZFEngM8vuFqjlwY");
     const token = getToken();
 
     if (token) {

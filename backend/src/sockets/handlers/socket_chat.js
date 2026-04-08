@@ -16,7 +16,7 @@ import {
 
 export const socket_chat = (socket, io) => {
   const user_id = socket.user_id;
-  socket.join(user_id);
+  socket.join(String(user_id));
 
   socket.on("room:join", async (payload) => {
     const { room_id } =
@@ -38,8 +38,8 @@ export const socket_chat = (socket, io) => {
           message: "Not allowed in this room",
         });
       }
-
-      socket.join(room_id);
+      // user notification room is joined on connect
+      //socket.join(room_id);
     } catch {
       return socket.emit("error", {
         type: "room:join",
