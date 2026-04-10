@@ -34,11 +34,11 @@ export default function SidebarContainer() {
       setRooms((prevRooms) => {
         return prevRooms
           .map((room) =>
-            room.room_id === msg.room_id ? { ...room, last_msg: msg.content, last_msg_time: new Date(msg.created_at).getTime() } : room,
+            room.room_id === msg.room_id ? { ...room, last_msg: msg.content, last_msg_at: new Date(msg.created_at).getTime() } : room,
           )
           .sort((a, b) => {
-            const aTime = a.last_msg_time || 0;
-            const bTime = b.last_msg_time || 0;
+            const aTime = a.last_msg_at || 0;
+            const bTime = b.last_msg_at || 0;
             return bTime - aTime;
           });
       });

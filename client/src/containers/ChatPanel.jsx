@@ -62,18 +62,21 @@ export default function ChatPanel() {
     <>
       <Header />
       <div className="flex flex-col justify-between h-[100vh]">
-        <a
-          className="text-[#c0d6c2] text-sm"
-          href="https://www.freepik.com/free-vector/app-icon-doodle-pattern_363621845.htm#fromView=search&page=3&position=44&uuid=e8c953a4-381c-4aeb-abd0-b0f4890a4988&query=chat+pattern"
-        >
-          Image by vector_corp on Freepik
-        </a>
+        <div className="flex flex-col justify-start">
 
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          chatData && chatData.map((msg) => <Bubble key={msg.id} {...msg} />)
-        )}
+          <a
+            className="text-[#c0d6c2] text-sm"
+            href="https://www.freepik.com/free-vector/app-icon-doodle-pattern_363621845.htm#fromView=search&page=3&position=44&uuid=e8c953a4-381c-4aeb-abd0-b0f4890a4988&query=chat+pattern"
+            >
+            Image by vector_corp on Freepik
+          </a>
+
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            chatData && chatData.map((msg) => <Bubble key={msg.id} {...msg} />)
+          )}
+        </div>
         <ChatInput />
       </div>
     </>
