@@ -174,13 +174,13 @@ export const add_message = `
     WITH new_msg AS (
         INSERT INTO messages (room_id, sender_id, content)
         VALUES ($1, $2, $3)
-        RETURNING msg_id
+        RETURNING *
     )
     UPDATE rooms
     SET last_msg_ref = new_msg.msg_id       
     FROM new_msg
     WHERE rooms.room_id = $1
-    RETURNING new_msg.msg_id;
+    RETURNING new_msg.*;
 `
 
 

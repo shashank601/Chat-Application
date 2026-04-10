@@ -25,15 +25,15 @@ export const add_message = async_handler(async (req, res) => {
     const sender_id = req.user_id;
     const { content } = req.body;
     
-    const [{ msg_id } = {}] = await add_message_service(room_id, sender_id, content);
-    if (!msg_id) {
+    const message = await add_message_service(room_id, sender_id, content);
+    if (!message) {
         const err = new Error('Failed to create message');
         err.code = 500;
         throw err;
     }
     res.status(201).json({
         success: true,
-        data: msg_id
+        data: message[0]
     });
 });
 

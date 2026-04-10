@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { getMyRooms, createRoom } from "../services/RoomService.js";
-import Searchbar from "../components/searchbar.jsx";
+import Searchbar from "../components/Searchbar.jsx";
 import SidebarItem from "../components/cards/SidebarItem.jsx";
 import { mapRoom } from "../mapper/mapGetRoom.js";
 import { useSocket } from "../context/SocketContext.jsx";
@@ -34,11 +34,11 @@ export default function SidebarContainer() {
       setRooms((prevRooms) => {
         return prevRooms
           .map((room) =>
-            room.room_id === msg.room_id ? { ...room, last_msg: msg } : room,
+            room.room_id === msg.room_id ? { ...room, last_msg: msg.data.content, createdAt: msg.data.created_at } : room,
           )
           .sort((a, b) => {
-            const aTime = a.last_msg?.created_at || 0;
-            const bTime = b.last_msg?.created_at || 0;
+            const aTime = a.last_msg_time || 0;
+            const bTime = b.last_msg_time || 0;
             return bTime - aTime;
           });
       });

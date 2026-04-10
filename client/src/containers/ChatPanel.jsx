@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import { getMessages } from "../services/MessageService";
 import { mapMessage } from "../mapper/mapGetMessages";
 import { useAuth } from "../context/AuthContext";
-
+import Bubble  from "../components/cards/Bubble";
+import ChatInput from "../components/ChatInput";
 export default function ChatPanel() {
     const { user } = useAuth();
     const [loading, setLoading] = useState(true);
@@ -38,8 +39,10 @@ export default function ChatPanel() {
     return (
         <div>
             <h1>room: {roomId}</h1>
-            {console.log(chatData)}
-            {loading ? <p>Loading...</p> : <p>{JSON.stringify(chatData)}</p>}
+            {/* {console.log(chatData)} */}
+            
+            {loading ? <p>Loading...</p> : chatData.map((msg) => <Bubble key={msg.id} {...msg} />)}
+            <ChatInput />
         </div>
     )
 }
