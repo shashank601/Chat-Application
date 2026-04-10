@@ -14,7 +14,15 @@ export default function SidebarItem({ room, onClick }) {
             <div className="flex justify-between text-sm text-slate-600">
                 <p className="w-3/4 truncate w-full">{room.last_msg || "Say Hi! to start a conversation"}</p>
                 {console.log(room.last_msg_at)}
-                <p className="w-1/4">{room.last_msg_at || ""}</p>
+                <p className="w-1/4">
+                    {(() => {
+                        if (!room.last_msg_at) return "";
+                        const date = new Date(room.last_msg_at);
+                        const h = date.getHours();
+                        const m = String(date.getMinutes()).padStart(2, "0");
+                        return `${h}:${m}`;
+                    })()}
+                </p>
             </div>
         </div>
     )

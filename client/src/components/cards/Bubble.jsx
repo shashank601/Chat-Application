@@ -2,13 +2,11 @@ export default function Bubble({ senderName, content, createdAt, isMine }) {
   return (
     <div className={`flex w-full ${isMine ? "justify-end" : "justify-start"}`}>
       <div
-        className={`border border-gray-200 rounded-lg p-2 w-fit max-w-[70%] min-w-[50px] min-h-[70px] ${
-          isMine
-            ? "bg-blue-600 rounded-tr-none"
-            : "bg-[#822121] rounded-tl-none"
+        className={`border border-gray-200 bg-blue-500 rounded-2xl p-2 w-fit max-w-[70%] min-w-[50px] min-h-[70px] ${
+          isMine ? " rounded-tr-none" : " rounded-tl-none"
         }`}
       >
-        <div className="font-serif text-[12px] text-white">{senderName}</div>
+        <div className="font-serif text-[12px] text-gray-300">{senderName}</div>
 
         <div className="text-white text-center">{content}</div>
 
