@@ -5,7 +5,8 @@ import {
     add_member as add_member_query, 
     leave_room as leave_group_query,
     promote_to_admin as promote_to_admin_query,
-    search_user as search_user_query
+    search_user as search_user_query,
+    check_user_exists as check_user_exists_query
 } from "../db/queries.js";
 
 export const search_users_service = async (q, user_id) => { 
@@ -134,4 +135,18 @@ export const promote_to_admin_service = async (user_id, room_id, member_id) => {
     const {rows: result_rows} = await pool.query(promote_to_admin_query, [room_id, member_id]);
     return result_rows;
 
+}
+
+export const check_user_exists_service = async (user_id) => {
+    try {
+        if (!user_id) {
+            const err = new Error("User ID is required");
+            err.code = 400;
+            throw err;
+        }
+        const {rows: user_exists} = await pool.query(check_user_exists_query, [user_id]);
+        return user_exists;
+    } catch(error) {
+        throw error;
+    }
 }

@@ -140,7 +140,7 @@ export const get_my_rooms = `
 `
 
 export const check_user_exists = `
-    SELECT user_id
+    SELECT *
     FROM users
     WHERE user_id = $1;
 `
@@ -174,15 +174,14 @@ export const add_message = `
     WITH new_msg AS (
         INSERT INTO messages (room_id, sender_id, content)
         VALUES ($1, $2, $3)
-        RETURNING *
+        RETURNING msg_id, room_id, sender_id, content, created_at
     )
     UPDATE rooms
     SET last_msg_ref = new_msg.msg_id       
     FROM new_msg
     WHERE rooms.room_id = $1
-    RETURNING new_msg.*;
+    RETURNING new_msg.msg_id, new_msg.room_id, new_msg.sender_id, new_msg.content, new_msg.created_at;
 `
-
 
 export const delete_message = `
     UPDATE messages

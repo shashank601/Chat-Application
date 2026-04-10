@@ -21,13 +21,13 @@ export default function Searchbar() {
 
   return (
     <div className="flex flex-col relative ">
-      <div className="flex gap-1 items-center border-2 border-zinc-900 bg-slate-100">
+      <div className="flex gap-1 items-center border-2 border-zinc-900  bg-slate-100">
         <input
           value={searchQuery}
           type="text"
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search users..."
-          className="flex-1 pl-4 w-45 p-2 outline-none "
+          className="flex-1 pl-4 w-45 p-2 outline-none"
         />
         <button
           onClick={searchHandler}

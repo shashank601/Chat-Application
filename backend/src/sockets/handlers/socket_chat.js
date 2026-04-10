@@ -8,6 +8,7 @@ import {
   is_user_in_room_service,
   delete_room_service,
 } from "../../services/room_services.js";
+import { check_user_exists_service } from "../../services/user_service.js";
 import {
   leave_room_service,
   add_member_to_group_service,
@@ -19,8 +20,10 @@ export const socket_chat = (socket, io) => {
   socket.join(String(user_id));
 
   socket.on("room:join", async (payload) => {
-    const { room_id } =
+    let { room_id } =
       typeof payload === "string" ? { room_id: payload } : payload || {};
+
+    if (typeof room_id === "number") room_id = String(room_id);
 
     if (!room_id || typeof room_id !== "string") {
       return socket.emit("error", {
@@ -39,7 +42,7 @@ export const socket_chat = (socket, io) => {
         });
       }
       // user notification room is joined on connect
-      //socket.join(room_id);
+      socket.join(room_id);
     } catch {
       return socket.emit("error", {
         type: "room:join",
@@ -49,7 +52,9 @@ export const socket_chat = (socket, io) => {
   });
 
   socket.on("message:send", async (payload) => {
-    const { room_id, msg } = payload || {};
+    let { room_id, msg } = payload || {};
+
+    if (typeof room_id === "number") room_id = String(room_id);
 
     if (
       !room_id ||
@@ -73,9 +78,11 @@ export const socket_chat = (socket, io) => {
         });
       }
 
-      const message = await add_message_service(room_id, user_id, msg);
-
-      io.to(room_id).emit("message:new", message);
+      const messageRows = await add_message_service(room_id, user_id, msg);
+      const message = messageRows[0];
+      const userRows = await check_user_exists_service(user_id);
+      const user = userRows[0];
+      io.to(room_id).emit("message:new", { ...message, sender_name: user.username });
     } catch {
       return socket.emit("error", {
         type: "message:send",

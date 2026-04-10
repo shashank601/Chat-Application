@@ -34,7 +34,7 @@ export default function SidebarContainer() {
       setRooms((prevRooms) => {
         return prevRooms
           .map((room) =>
-            room.room_id === msg.room_id ? { ...room, last_msg: msg.data.content, createdAt: msg.data.created_at } : room,
+            room.room_id === msg.room_id ? { ...room, last_msg: msg.content, last_msg_time: new Date(msg.created_at).getTime() } : room,
           )
           .sort((a, b) => {
             const aTime = a.last_msg_time || 0;
@@ -97,7 +97,7 @@ export default function SidebarContainer() {
             key={room.room_id}
             room={room}
             onClick={() => {
-              navigate(`/chat/${room.room_id}`);
+              navigate(`/chat/${room.display_name}/${room.room_id}`);
             }}
           />
         ))}

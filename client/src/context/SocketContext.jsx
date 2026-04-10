@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState, useCallback } from "react";
 import { io } from "socket.io-client";
 import { getToken } from "../utils/Token.js";
 
@@ -8,14 +8,17 @@ export const SocketProvider = ({ children }) => {
   const socketRef = useRef(null);
   const [connected, setConnected] = useState(false);
 
-  useEffect(() => {
-    // create an insatnce, donot autoconnect
+  if (!socketRef.current) {
+    // create an instance, do not autoconn
     socketRef.current = io("http://localhost:5000", { autoConnect: false });
+  }
+
+  useEffect(() => {
     const s = socketRef.current;
 
     // now connect
     s.auth = { token: getToken() };
-    s.connect();
+    if (!s.connected) s.connect();
 
     // for status
     const onConnect = () => setConnected(true);
@@ -62,11 +65,7 @@ export const SocketProvider = ({ children }) => {
     return () => socketRef.current?.off("room:cleared", cb);
   };
 
-  const onError = (cb) => {
-    socketRef.current?.on("error", cb);
-    return () => socketRef.current?.off("error", cb);
-  };
-
+  
   // get a room id
   const onRoomCreated = (cb) => {
     socketRef.current?.on("room:created", cb);
@@ -105,7 +104,7 @@ export const SocketProvider = ({ children }) => {
     onReceiveMessage,
     onMessageDeleted,
     onRoomCleared,
-    onError,
+    
     onRoomCreated,
     onRoomDeleted,
     onMemberAdded,
