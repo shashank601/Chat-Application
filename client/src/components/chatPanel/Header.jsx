@@ -98,13 +98,19 @@ export default function Header({ members, setChatInputDisplay }) {
           </ul>
         </ul>
         {display === "" && (
-          <a
+          <div
             className="text-[#000] text-[10px] bg-gradient-to-r from-slate-200 "
             href="https://www.freepik.com/free-vector/app-icon-doodle-pattern_363621845.htm#fromView=search&page=3&position=44&uuid=e8c953a4-381c-4aeb-abd0-b0f4890a4988&query=chat+pattern"
-          >
-            <span className="font-bold">credits: </span>
-            <span>Image by vector_corp on Freepik</span>
-          </a>
+          > 
+            <a href="https://www.freepik.com/free-vector/app-icon-doodle-pattern_363621845.htm#fromView=search&page=3&position=44&uuid=e8c953a4-381c-4aeb-abd0-b0f4890a4988&query=chat+pattern">
+              <span className="font-bold">credits: </span>
+              <span>Image by vector_corp on Freepik</span>
+            </a>
+            <a href="https://www.flaticon.com">
+              <span className="font-bold ml-8">Icons: </span>
+              <span>by Flaticon</span>
+            </a>
+          </div>
         )}
         <div className="sticky top-14 w-full relative">
           {display === "showSearchbar" && (
