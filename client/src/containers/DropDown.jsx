@@ -7,6 +7,7 @@ export default function DropDown({ searchResults }) {
 
 
     const addFriendHandler = async (userId) => {
+      
         try {
             const response = await createRoom(userId);
         } catch(err) {

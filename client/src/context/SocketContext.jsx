@@ -49,6 +49,9 @@ export const SocketProvider = ({ children }) => {
   const leaveRoom = (room_id) =>
     socketRef.current?.emit("room:leave", { room_id });
 
+  const addMember = (room_id, member_id) =>
+    socketRef.current?.emit("room:add_member", { room_id, member_id });
+
   // listeners regisatration
   const onReceiveMessage = (cb) => {
     socketRef.current?.on("message:new", cb);
@@ -100,6 +103,7 @@ export const SocketProvider = ({ children }) => {
     deleteMessage,
     clearRoom,
     leaveRoom,
+    addMember,
 
     onReceiveMessage,
     onMessageDeleted,

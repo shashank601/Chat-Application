@@ -19,6 +19,7 @@ export const socket_chat = (socket, io) => {
   const user_id = socket.user_id;
   socket.join(String(user_id));
 
+  // not creating room, just joining socket
   socket.on("room:join", async (payload) => {
     let { room_id } =
       typeof payload === "string" ? { room_id: payload } : payload || {};
