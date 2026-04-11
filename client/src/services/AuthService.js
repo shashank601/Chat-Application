@@ -1,12 +1,14 @@
 import api from "./Axios.js";
-
+import { clearToken } from "../utils/Token.js";
 
 export const Login = ({email, password}) => {
     const credentials = {email, password};
     return api.post('/auth/login', credentials); // jwt token or error
 }
 
-
+export const Logout = () => {
+    return clearToken(); 
+}
 
 export const Signup = ({username, email, password}) => { 
     const credentials = {name: username, email, password};

@@ -6,12 +6,14 @@ import { mapRoom } from "../mapper/mapGetRoom.js";
 import { useSocket } from "../context/SocketContext.jsx";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import { Logout } from "../services/AuthService.js";
 
 export default function SidebarContainer() {
   // const [selectedRoomId, setSelectedRoomId] = useState(null);
-  const { onReceiveMessage, onRoomCreated, onRoomDeleted, onRoomCleared } = useSocket();
+  const { onReceiveMessage, onRoomCreated, onRoomDeleted, onRoomCleared } =
+    useSocket();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   //console.log(`User: ${Object.keys(user)}`); i have  only id in context no username!
 
   const userId = user?.id || "";
@@ -92,7 +94,9 @@ export default function SidebarContainer() {
       console.log("Sidebar: room:cleared received", { room_id });
       setRooms((prev) =>
         prev.map((room) =>
-          String(room.room_id) === String(room_id) ? { ...room, last_msg: "", last_msg_at: null } : room,
+          String(room.room_id) === String(room_id)
+            ? { ...room, last_msg: "", last_msg_at: null }
+            : room,
         ),
       );
     };
@@ -111,6 +115,20 @@ export default function SidebarContainer() {
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold pb-4">Live Chat</h1>
           <div className="relative">
+            <div
+              className="fixed left-1 bottom-1 mb-12 border border-gray-300 rounded-full w-8 h-8 flex items-center justify-center"
+              onClick={() => {
+                Logout();
+                setUser(null);
+                navigate("/login");
+              }}
+            >
+              <img
+                src="/assets/logout.svg"
+                alt="logout"
+                className="w-4 h-4 ml-1 mt-1"
+              />
+            </div>
             {!display && (
               <button
                 onClick={() => setDisplay(true)}
@@ -157,7 +175,9 @@ export default function SidebarContainer() {
             key={room.room_id}
             room={room}
             onClick={() => {
-              navigate(`/chat/${room.type}/${room.role}/${room.display_name}/${room.room_id}`);
+              navigate(
+                `/chat/${room.type}/${room.role}/${room.display_name}/${room.room_id}`,
+              );
             }}
           />
         ))}
