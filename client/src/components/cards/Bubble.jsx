@@ -13,7 +13,7 @@ export default function Bubble({ senderName, content, createdAt, isMine }) {
           </div>
         </div>
 
-        <div className="text-white text-center">{content}</div>
+        <div className="text-white text-align-left">{content}</div>
 
         <div className="text-right text-[10px] text-gray-300">
           {(() => {

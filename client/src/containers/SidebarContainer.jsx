@@ -7,7 +7,7 @@ import { useSocket } from "../context/SocketContext.jsx";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { Logout } from "../services/AuthService.js";
-import { createRoom } from "../services/RoomService.js";
+
 
 export default function SidebarContainer() {
   // const [selectedRoomId, setSelectedRoomId] = useState(null);
