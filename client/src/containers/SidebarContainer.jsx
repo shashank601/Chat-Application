@@ -105,9 +105,9 @@ export default function SidebarContainer() {
               </button>
             )}
             {display && (
-              <div className="fixed left-1 bottom-1 flex gap-2 items-center bg-white p-2 border border-gray-300 rounded-lg z-10">
+              <div className="fixed left-1 bottom-1 flex gap-0 items-center bg-white p-2 border border-gray-300  z-10">
                 <input
-                  className="border border-zinc-900 px-2 py-1 rounded outline-none focus:outline-none focus:ring-2 focus:ring-zinc-900"
+                  className="border border-zinc-900 px-2 py-1 rounded-none outline-none focus:outline-none focus:ring-1 focus:ring-zinc-900"
                   value={groupName}
                   onChange={(e) => setGroupName(e.target.value)}
                   type="text"
@@ -116,7 +116,7 @@ export default function SidebarContainer() {
                 />
                 <button
                   onClick={createRoomHandler}
-                  className="px-3 py-1 bg-zinc-900 text-white rounded hover:bg-zinc-700"
+                  className="h-full px-3 py-1 border-1 border-zinc-900 bg-zinc-900 text-white rounded-br rounded-tr hover:bg-zinc-700"
                 >
                   Create
                 </button>
@@ -125,7 +125,7 @@ export default function SidebarContainer() {
                     setDisplay(false);
                     setGroupName("");
                   }}
-                  className="px-2.5 pb-1 text-gray-500 hover:text-gray-700 font-bold text-xl rounded-full border-1"
+                  className="px-2.5 ml-2 pb-1 text-gray-500 hover:text-gray-700 font-bold text-xl rounded-full border-1"
                 >
                   x
                 </button>
