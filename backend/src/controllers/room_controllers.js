@@ -16,6 +16,8 @@ export const create_room = async_handler(async (req, res) => {
     
     const room = await create_room_service(receiver_id, group_name, user_id);
 
+
+    
     const userRoom = String(user_id);
     req.io.to(userRoom).emit('room:created', room);
 

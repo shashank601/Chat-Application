@@ -7,11 +7,17 @@ import { useSocket } from "../context/SocketContext.jsx";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { Logout } from "../services/AuthService.js";
+import { createRoom } from "../services/RoomService.js";
 
 export default function SidebarContainer() {
   // const [selectedRoomId, setSelectedRoomId] = useState(null);
-  const { onReceiveMessage, onRoomCreated, onRoomDeleted, onRoomCleared } =
-    useSocket();
+  const {
+    onReceiveMessage,
+    onRoomCreated,
+    onRoomDeleted,
+    onRoomCleared,
+    onMemberAdded,
+  } = useSocket();
   const navigate = useNavigate();
   const { user, setUser } = useAuth();
   //console.log(`User: ${Object.keys(user)}`); i have  only id in context no username!
@@ -68,6 +74,16 @@ export default function SidebarContainer() {
     return () => remove();
   }, [onRoomCreated, fetchRooms]);
 
+  // refetch on user added notification
+  useEffect(() => {
+    const memberAddedHandler = ({ room_id, member_id }) => {
+      fetchRooms();
+    };
+
+    const remove = onMemberAdded(memberAddedHandler);
+    return () => remove();
+  }, [onMemberAdded, fetchRooms]);
+
   useEffect(() => {
     fetchRooms();
   }, [fetchRooms]);
@@ -105,6 +121,14 @@ export default function SidebarContainer() {
       off();
     };
   }, [onRoomCleared]);
+
+  const addFriendHandler = async (userId) => {
+    try {
+      const response = await createRoom(userId);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const [display, setDisplay] = useState(false);
   const [groupName, setGroupName] = useState("");
@@ -166,7 +190,7 @@ export default function SidebarContainer() {
             )}
           </div>
         </div>
-        <Searchbar />
+        <Searchbar onSelectUser={addFriendHandler}/> {/* dependency injection */}
       </div>
 
       <div className="flex-1 overflow-y-auto pt-4">

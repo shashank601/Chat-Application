@@ -1,19 +1,9 @@
-import { createRoom } from "../services/RoomService.js";
+
 import { useState } from "react";
 
-export default function DropDown({ searchResults }) {
+export default function DropDown({ searchResults, onSelectUser }) {
     const [loading, setLoading] = useState(true);
     
-
-
-    const addFriendHandler = async (userId) => {
-      
-        try {
-            const response = await createRoom(userId);
-        } catch(err) {
-          console.log(err);
-        }
-    };
     
     return (
 
@@ -27,7 +17,7 @@ export default function DropDown({ searchResults }) {
                 <p className="w-40 truncate">{user.email}</p>
               </div>
               <button 
-                onClick={() => addFriendHandler(user.user_id)}
+                onClick={() => onSelectUser(user.user_id)}
                 className="bg-green-600 px-3 m-2 ml-0 text-slate-200 hover:animate-pulse"
               >
                 add

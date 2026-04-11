@@ -230,7 +230,7 @@ export const socket_chat = (socket, io) => {
         member_id,
       );
 
-      io.to(room_id).emit("member:added", { room_id, member_id });
+      io.to(member_id).emit("member:added", { room_id, member_id });
     } catch {
       return socket.emit("error", {
         type: "room:add_member",

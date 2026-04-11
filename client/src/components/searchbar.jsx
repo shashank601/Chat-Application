@@ -2,7 +2,7 @@ import { useState } from "react";
 import { searchUsers } from "../services/UserService.js";
 import DropDown from "../containers/DropDown.jsx";
 
-export default function Searchbar() {
+export default function Searchbar({ onSelectUser }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -18,6 +18,8 @@ export default function Searchbar() {
       console.log(error);
     }
   };
+
+
 
   return (
     <div className="flex flex-col relative ">
@@ -38,7 +40,7 @@ export default function Searchbar() {
       </div>
       {showDropdown && (
         <div className="absolute top-full left-0 w-full z-50">
-          <DropDown searchResults={searchResults} />
+          <DropDown searchResults={searchResults} onSelectUser={onSelectUser} />
         </div>
       )}
     </div>

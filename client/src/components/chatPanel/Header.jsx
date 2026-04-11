@@ -2,6 +2,9 @@ import { useParams } from "react-router-dom";
 import { useSocket } from "../../context/SocketContext";
 import Searchbar from "../Searchbar.jsx";
 
+
+
+
 export default function Header() {
   const { displayName, type, role, roomId } = useParams();
   const { clearRoom } = useSocket();
