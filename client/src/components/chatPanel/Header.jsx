@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useSocket } from "../../context/SocketContext";
 import Searchbar from "../Searchbar.jsx";
 import { useState, useEffect } from "react";
+import GroupMembers from "../../containers/GroupMembers";
 
 export default function Header({ members }) {
   const { displayName, type, role, roomId } = useParams();
@@ -11,7 +12,9 @@ export default function Header({ members }) {
     await clearRoom(roomId);
   };
 
-  const showGroupMembersHandler = () => {};
+  const showGroupMembersHandler = () => {
+    setDisplay("showGroupMembers");
+  };
 
   const onSelectUser = (userId) => {
     setDisplay("");
@@ -34,30 +37,40 @@ export default function Header({ members }) {
           <ul className="flex justify-end gap-1">
             {type === "group" &&
               role === "admin" &&
-              (display === "" ? (
-                <li
-                  onClick={() => setDisplay("showSearchbar")}
-                  className="text-white cursor-pointer mr-2 bg-slate-200 hover:bg-slate-400 px-1 py-1 rounded-lg hover:animate-pulse  h-6 w-6"
-                >
-                  <img src="/assets/addFriend.svg" alt="add friend" />
-                </li>
-              ) : (
+              (display === "showSearchbar" ? (
                 <li
                   onClick={() => setDisplay("")}
                   className="text-white cursor-pointer mr-2 bg-slate-200 hover:bg-slate-400 px-1 py-1 rounded-lg hover:animate-pulse  h-6 w-6"
                 >
                   <img src="/assets/close.svg" alt="close" />
                 </li>
+              ) : (
+                <li
+                  onClick={() => setDisplay("showSearchbar")}
+                  className="text-white cursor-pointer mr-2 bg-slate-200 hover:bg-slate-400 px-1 py-1 rounded-lg hover:animate-pulse  h-6 w-6"
+                >
+                  <img src="/assets/addFriend.svg" alt="add friend" />
+                </li>
               ))}
-            {type === "group" && (
-              <li
-                onClick={showGroupMembersHandler}
-                className="text-white cursor-pointer bg-slate-100 hover:bg-slate-200 px-1 py-1 rounded-lg hover:animate-pulse mr-2 h-6 w-6"
-              >
-                <img src="/assets/group.svg" alt="delete" />
-              </li>
-            )}
-            
+            {
+              type === "group" &&
+              (display === "showGroupMembers" ? (
+                <li
+                  onClick={() => setDisplay("")}
+                  className="text-white cursor-pointer mr-2 bg-slate-200 hover:bg-slate-400 px-1 py-1 rounded-lg hover:animate-pulse  h-6 w-6"
+                >
+                  <img src="/assets/close.svg" alt="close" />
+                </li>
+              ) : (
+                <li
+                  onClick={showGroupMembersHandler}
+                  className="text-white cursor-pointer bg-slate-100 hover:bg-slate-200 px-1 py-1 rounded-lg hover:animate-pulse mr-2 h-6 w-6"
+                >
+                  <img src="/assets/group.svg" alt="delete" />
+                </li>
+              ))
+            }
+
             <li
               onClick={deleteChatsHandler}
               className="text-white cursor-pointer bg-slate-100 hover:bg-slate-200 px-1 py-1 rounded-xl hover:animate-pulse mr-2 h-6 w-6"
@@ -80,7 +93,10 @@ export default function Header({ members }) {
           </a>
         )}
         <div className="sticky top-14 right-0 w-full relative">
-          {display === "showSearchbar" && <Searchbar onSelectUser={onSelectUser} />}
+          {display === "showSearchbar" && (
+            <Searchbar onSelectUser={onSelectUser} />
+          )}
+          {display === "showGroupMembers" && <GroupMembers members={members} />}
         </div>
       </div>
     </>
