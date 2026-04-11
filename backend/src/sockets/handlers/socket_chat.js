@@ -224,13 +224,13 @@ export const socket_chat = (socket, io) => {
       });
     }
     try {
-      let result_row = await add_member_to_group_service(
+      const [result_row] = await add_member_to_group_service(
         user_id,
         room_id,
         member_id,
       );
 
-      io.to(member_id).emit("member:added", { room_id, member_id });
+      io.to(room_id).emit("member:added", { room_id, member_id, role: result_row.role, username: result_row.username });
     } catch {
       return socket.emit("error", {
         type: "room:add_member",
@@ -249,13 +249,13 @@ export const socket_chat = (socket, io) => {
       });
     }
     try {
-      const result_row = await promote_to_admin_service(
+      const [result_row] = await promote_to_admin_service(
         user_id,
         room_id,
         member_id,
       );
 
-      io.to(room_id).emit("member:promoted", { room_id, member_id });
+      io.to(room_id).emit("member:promoted", { room_id, member_id, role: result_row.role });
     } catch {
       return socket.emit("error", {
         type: "room:promote_member",

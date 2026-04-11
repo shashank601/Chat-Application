@@ -3,7 +3,7 @@ import { useSocket } from "../../context/SocketContext";
 import Searchbar from "../Searchbar.jsx";
 import { useState, useEffect } from "react";
 
-export default function Header() {
+export default function Header({ members }) {
   const { displayName, type, role, roomId } = useParams();
   const { clearRoom, addMember } = useSocket();
 
@@ -11,15 +11,17 @@ export default function Header() {
     await clearRoom(roomId);
   };
 
+  const showGroupMembersHandler = () => {};
+
   const onSelectUser = (userId) => {
-    setDisplay(false);
+    setDisplay("");
     addMember(roomId, userId);
   };
 
-  const [display, setDisplay] = useState(false);
+  const [display, setDisplay] = useState("");
 
   useEffect(() => {
-    setDisplay(false);
+    setDisplay("");
   }, [roomId]);
 
   return (
@@ -32,22 +34,30 @@ export default function Header() {
           <ul className="flex justify-end gap-1">
             {type === "group" &&
               role === "admin" &&
-              (!display ? (
+              (display === "" ? (
                 <li
-                  onClick={() => setDisplay(!display)}
+                  onClick={() => setDisplay("showSearchbar")}
                   className="text-white cursor-pointer mr-2 bg-slate-200 hover:bg-slate-400 px-1 py-1 rounded-lg hover:animate-pulse  h-6 w-6"
                 >
                   <img src="/assets/addFriend.svg" alt="add friend" />
                 </li>
               ) : (
                 <li
-                  onClick={() => setDisplay(!display)}
+                  onClick={() => setDisplay("")}
                   className="text-white cursor-pointer mr-2 bg-slate-200 hover:bg-slate-400 px-1 py-1 rounded-lg hover:animate-pulse  h-6 w-6"
                 >
                   <img src="/assets/close.svg" alt="close" />
                 </li>
               ))}
-
+            {type === "group" && (
+              <li
+                onClick={showGroupMembersHandler}
+                className="text-white cursor-pointer bg-slate-100 hover:bg-slate-200 px-1 py-1 rounded-lg hover:animate-pulse mr-2 h-6 w-6"
+              >
+                <img src="/assets/group.svg" alt="delete" />
+              </li>
+            )}
+            
             <li
               onClick={deleteChatsHandler}
               className="text-white cursor-pointer bg-slate-100 hover:bg-slate-200 px-1 py-1 rounded-xl hover:animate-pulse mr-2 h-6 w-6"
@@ -60,7 +70,7 @@ export default function Header() {
             </li>
           </ul>
         </ul>
-        {!display && (
+        {display === "" && (
           <a
             className="text-[#000] text-[10px] bg-gradient-to-r from-slate-200 "
             href="https://www.freepik.com/free-vector/app-icon-doodle-pattern_363621845.htm#fromView=search&page=3&position=44&uuid=e8c953a4-381c-4aeb-abd0-b0f4890a4988&query=chat+pattern"
@@ -70,7 +80,7 @@ export default function Header() {
           </a>
         )}
         <div className="sticky top-14 right-0 w-full relative">
-          {display && <Searchbar onSelectUser={onSelectUser} />}
+          {display === "showSearchbar" && <Searchbar onSelectUser={onSelectUser} />}
         </div>
       </div>
     </>

@@ -46,9 +46,14 @@ export const check_admin = `
 
 
 export const add_member = `
-    INSERT INTO members (room_id, user_id, role) 
-    VALUES ($1, $2, $3)
-    RETURNING room_id, user_id, role;
+    WITH inserted AS (
+        INSERT INTO members (room_id, user_id, role) 
+        VALUES ($1, $2, $3)
+        RETURNING room_id, user_id, role
+    )
+    SELECT i.room_id, i.user_id, i.role, u.username
+    FROM inserted i
+    JOIN users u ON i.user_id = u.user_id;
 `
 
 
@@ -84,10 +89,11 @@ export const is_user_in_room = `
     WHERE room_id = $1 AND user_id = $2;
 `
 
-export const get_room_members = `   -- only allow if user is a member of the room
-    SELECT user_id, role
-    FROM members
-    WHERE room_id = $1;
+export const get_room_members = `    -- only allow if user is the member of the room
+    SELECT m.user_id, m.role, u.username
+    FROM members m
+    JOIN users u ON m.user_id = u.user_id
+    WHERE m.room_id = $1;
 `
 
 export const promote_to_admin = `
@@ -95,7 +101,7 @@ export const promote_to_admin = `
     SET role = 'admin'
     WHERE m.room_id = $1
     AND m.user_id = $2
-    RETURNING user_id;
+    RETURNING user_id, role;
 `
 
 

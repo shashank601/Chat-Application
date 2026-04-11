@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getMessages } from "../services/MessageService";
+import { getRoomMembers } from "../services/RoomService";
 import { mapMessage } from "../mapper/mapGetMessages";
 import { useAuth } from "../context/AuthContext";
 import Bubble from "../components/cards/Bubble";
@@ -13,12 +14,42 @@ export default function ChatPanel() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [chatData, setChatData] = useState(null);
-  const { sendMessage, onReceiveMessage, joinRoom, onRoomCleared } = useSocket();
+  const [members, setMembers] = useState([]);
+
+  const { sendMessage, onReceiveMessage, joinRoom, onRoomCleared, onMemberAdded } = useSocket();
 
   const { roomId } = useParams();
   useEffect(() => {
     joinRoom(roomId);
   }, [joinRoom, roomId]);
+
+  useEffect(() => {
+    const memberAddedHandler = (data) => {
+      // data contains room_id too thats why we are not checking for roomId
+      setMembers((prev) => [...prev, {
+        id: data.member_id,
+        username: data.username,
+        role: data.role
+      }]);
+    };
+    const off = onMemberAdded(memberAddedHandler);
+    return () => {
+      off();
+    };
+  }, [onMemberAdded]);
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const res = await getRoomMembers(roomId);
+        setMembers(res.data);
+        console.log(res.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchMembers();
+  }, [roomId]);
 
   useEffect(() => {
     let isUnmounted = false;
@@ -68,7 +99,7 @@ export default function ChatPanel() {
 
   return (
     <>
-      <Header />
+      <Header members={members} />
       <div className="flex flex-col justify-between h-[100vh]">
         <div className="flex flex-col justify-start">
 
