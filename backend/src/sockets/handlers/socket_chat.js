@@ -80,6 +80,8 @@ export const socket_chat = (socket, io) => {
 
       const messageRows = await add_message_service(room_id, user_id, msg);
       const message = messageRows[0];
+      
+      
       const userRows = await check_user_exists_service(user_id);
       const user = userRows[0];
       io.to(room_id).emit("message:new", { ...message, sender_name: user.username });

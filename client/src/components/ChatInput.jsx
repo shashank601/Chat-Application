@@ -34,7 +34,7 @@ export default function ChatInput() {
         placeholder="Type your message..."
       ></textarea>
       <button onClick={sendHandler} className="p-2  text-slate-100 rounded-full hover:bg-[#21c063]">
-        <img src="../../assets/send.svg" className="w-5 h-5 ml-1" />
+        <img src="/assets/send.svg" className="w-5 h-5 ml-1" />
       </button>
     </div>
   );

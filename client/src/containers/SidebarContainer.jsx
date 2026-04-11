@@ -107,7 +107,7 @@ export default function SidebarContainer() {
             {display && (
               <div className="fixed left-1 bottom-1 flex gap-0 items-center bg-white p-2 border border-gray-300  z-10">
                 <input
-                  className="border border-zinc-900 px-2 py-1 rounded-none outline-none focus:outline-none focus:ring-1 focus:ring-zinc-900"
+                  className="border-1 border-zinc-900 px-2 py-1 rounded-none outline-none focus:outline-none  "
                   value={groupName}
                   onChange={(e) => setGroupName(e.target.value)}
                   type="text"
@@ -142,7 +142,7 @@ export default function SidebarContainer() {
             key={room.room_id}
             room={room}
             onClick={() => {
-              navigate(`/chat/${room.display_name}/${room.room_id}`);
+              navigate(`/chat/${room.type}/${room.role}/${room.display_name}/${room.room_id}`);
             }}
           />
         ))}
