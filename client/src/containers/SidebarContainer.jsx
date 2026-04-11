@@ -12,6 +12,8 @@ export default function SidebarContainer() {
   const { onReceiveMessage, onRoomCreated, onRoomDeleted } = useSocket();
   const navigate = useNavigate();
   const { user } = useAuth();
+  //console.log(`User: ${Object.keys(user)}`); i have  only id in context no username!
+  
   const userId = user?.id || "";
 
   const [rooms, setRooms] = useState([]);

@@ -13,7 +13,6 @@ export default function SidebarItem({ room, onClick }) {
             </div>
             <div className="flex justify-between text-sm text-slate-600">
                 <p className="w-3/4 truncate w-full">{room.last_msg || "Say Hi! to start a conversation"}</p>
-                {console.log(room.last_msg_at)}
                 <p className="w-1/4">
                     {(() => {
                         if (!room.last_msg_at) return "";

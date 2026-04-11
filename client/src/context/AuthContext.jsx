@@ -9,9 +9,10 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  
 
   useEffect(() => {
-    setToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE3NzU4MzUxNzcsImV4cCI6MTc3NjQzOTk3N30.sO73GuuXctnNKQ5OGpHho2Z0CnbRl36AuaGIvxGa9ts");
+    // setToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE3NzU4MzUxNzcsImV4cCI6MTc3NjQzOTk3N30.sO73GuuXctnNKQ5OGpHho2Z0CnbRl36AuaGIvxGa9ts");
     const token = getToken();
 
     if (token) {

@@ -7,14 +7,14 @@ export default function Header() {
       <li className="font-serif text-[#c0d6c2] font-bold text-xl">
         {displayName}
       </li>
-      <li className="flex justify-end gap-1">
+      <ul className="flex justify-end gap-1">
         <li className="text-white cursor-pointer bg-slate-100 hover:bg-blue-400 px-1 py-1 rounded-lg hover:animate-pulse  h-8 w-8">
           <img src="../../../assets/chatDelete.svg" alt="delete" />
         </li>
         <li className="text-white cursor-pointer bg-slate-100 hover:bg-red-500 px-1 py-1 rounded-lg hover:animate-pulse h-8 w-8">
           <img src="../../../assets/roomDelete.svg" alt="delete" />
         </li>
-      </li>
+      </ul>
     </ul>
   );
 }
