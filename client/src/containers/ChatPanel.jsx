@@ -13,7 +13,7 @@ export default function ChatPanel() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [chatData, setChatData] = useState(null);
-  const { sendMessage, onReceiveMessage, joinRoom } = useSocket();
+  const { sendMessage, onReceiveMessage, joinRoom, onRoomCleared } = useSocket();
 
   const { roomId } = useParams();
   useEffect(() => {
@@ -45,9 +45,7 @@ export default function ChatPanel() {
 
   useEffect(() => {
     const receiveMessageHandler = (msg) => {
-      console.log("Received message:", msg);
       const mappedMsg = mapMessage(msg, user.id);
-      console.log("Mapped message:", mappedMsg);
       setChatData((prev) => [...(prev || []), mappedMsg]);
     };
 
@@ -57,6 +55,16 @@ export default function ChatPanel() {
       off();
     };
   }, [onReceiveMessage, user.id, roomId]);
+
+  useEffect(() => {
+    const onRoomClearedHandler = () => {
+      setChatData("")
+    }
+    const off = onRoomCleared(onRoomClearedHandler);
+    return () => {
+      off();
+    };
+  }, [onRoomCleared]);
 
   return (
     <>

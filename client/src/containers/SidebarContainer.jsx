@@ -9,7 +9,7 @@ import { useAuth } from "../context/AuthContext.jsx";
 
 export default function SidebarContainer() {
   // const [selectedRoomId, setSelectedRoomId] = useState(null);
-  const { onReceiveMessage, onRoomCreated, onRoomDeleted } = useSocket();
+  const { onReceiveMessage, onRoomCreated, onRoomDeleted, onRoomCleared } = useSocket();
   const navigate = useNavigate();
   const { user } = useAuth();
   //console.log(`User: ${Object.keys(user)}`); i have  only id in context no username!
@@ -86,6 +86,21 @@ export default function SidebarContainer() {
     await createRoom(null, groupName); // no user intially so null later add users one by one
     fetchRooms();
   };
+
+  useEffect(() => {
+    const onRoomClearedHandler = ({ room_id }) => {
+      console.log("Sidebar: room:cleared received", { room_id });
+      setRooms((prev) =>
+        prev.map((room) =>
+          String(room.room_id) === String(room_id) ? { ...room, last_msg: "", last_msg_at: null } : room,
+        ),
+      );
+    };
+    const off = onRoomCleared(onRoomClearedHandler);
+    return () => {
+      off();
+    };
+  }, [onRoomCleared]);
 
   const [display, setDisplay] = useState(false);
   const [groupName, setGroupName] = useState("");

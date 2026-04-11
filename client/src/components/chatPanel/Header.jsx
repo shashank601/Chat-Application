@@ -1,7 +1,14 @@
 import { useParams } from "react-router-dom";
+import { useSocket } from "../../context/SocketContext";
 
 export default function Header() {
-  const { displayName, type, role } = useParams();
+  const { displayName, type, role, roomId } = useParams();
+  const { clearRoom } = useSocket();
+
+  const deleteChatsHandler = async () => {
+    await clearRoom(roomId);
+  };
+
 
   return (
     <ul className="flex sticky top-0 justify-between items-center p-1 bg-zinc-900 w-full">
@@ -16,7 +23,7 @@ export default function Header() {
             </li>
           )
         }
-        <li className="text-white cursor-pointer bg-slate-100 hover:bg-slate-200 px-1 py-1 rounded-xl hover:animate-pulse mr-2 h-6 w-6">
+        <li onClick={deleteChatsHandler} className="text-white cursor-pointer bg-slate-100 hover:bg-slate-200 px-1 py-1 rounded-xl hover:animate-pulse mr-2 h-6 w-6">
           <img src="/assets/chatDelete.svg" alt="delete" />
         </li>
         <li className="text-white cursor-pointer bg-slate-100 hover:bg-orange-500 px-1 py-1 rounded-xl hover:animate-pulse h-6 w-6">

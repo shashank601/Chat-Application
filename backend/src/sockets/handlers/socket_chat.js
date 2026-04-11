@@ -156,7 +156,7 @@ export const socket_chat = (socket, io) => {
         });
       }
 
-      io.to(room_id).emit("room:cleared", row);
+      io.to(room_id).emit("room:cleared", { room_id });
     } catch {
       return socket.emit("error", {
         type: "room:clear",

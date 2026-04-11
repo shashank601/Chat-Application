@@ -193,5 +193,5 @@ export const delete_message = `
 export const clear_room = `
     DELETE FROM messages
     WHERE room_id = $1
-    RETURNING msg_id;
+    RETURNING room_id;
 `
