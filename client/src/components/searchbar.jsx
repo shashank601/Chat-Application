@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { searchUsers } from "../services/UserService.js";
 import DropDown from "../containers/DropDown.jsx";
 
@@ -7,6 +7,7 @@ export default function Searchbar({ onSelectUser }) {
   const [searchResults, setSearchResults] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
+  const containerRef = useRef(null);
 
   const searchHandler = async () => {
     try {
@@ -19,10 +20,30 @@ export default function Searchbar({ onSelectUser }) {
     }
   };
 
+  // click outside detection for dropdown hiding
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+
+      // if click is outside current refrenced div (our dropdown container) then hide dropdown
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSelectUser = (userId) => {
+    onSelectUser(userId);
+    setShowDropdown(false);
+    setSearchQuery("");
+    setSearchResults([]);
+  };
+
 
 
   return (
-    <div className="flex flex-col relative ">
+    <div ref={containerRef} className="flex flex-col relative ">
       <div className="flex gap-1 items-center border-2 border-zinc-900  bg-slate-100">
         <input
           value={searchQuery}
@@ -40,7 +61,7 @@ export default function Searchbar({ onSelectUser }) {
       </div>
       {showDropdown && (
         <div className="absolute top-full left-0 w-full z-50">
-          <DropDown searchResults={searchResults} onSelectUser={onSelectUser} />
+          <DropDown searchResults={searchResults} onSelectUser={handleSelectUser} />
         </div>
       )}
     </div>
