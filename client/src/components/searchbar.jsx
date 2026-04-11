@@ -33,8 +33,10 @@ export default function Searchbar({ onSelectUser }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // wrap the onSelectUser callback to also hide dropdown and clear search
   const handleSelectUser = (userId) => {
     onSelectUser(userId);
+
     setShowDropdown(false);
     setSearchQuery("");
     setSearchResults([]);
