@@ -97,9 +97,11 @@ export default function ChatPanel() {
     };
   }, [onRoomCleared]);
 
+  const [chatInputDisplay, setChatInputDisplay] = useState(false);
+
   return (
     <>
-      <Header members={members} />
+      <Header members={members} setChatInputDisplay={setChatInputDisplay} />
       <div className="flex flex-col justify-between h-[100vh]">
         <div className="flex flex-col justify-start">
 
@@ -111,7 +113,9 @@ export default function ChatPanel() {
             chatData && chatData.map((msg) => <Bubble key={msg.id} {...msg} />)
           )}
         </div>
-        <ChatInput />
+        {
+          chatInputDisplay && <ChatInput />
+        }
       </div>
     </>
   );

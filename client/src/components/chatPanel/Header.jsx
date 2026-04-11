@@ -4,7 +4,7 @@ import Searchbar from "../Searchbar.jsx";
 import { useState, useEffect } from "react";
 import GroupMembers from "../../containers/GroupMembers";
 
-export default function Header({ members }) {
+export default function Header({ members, setChatInputDisplay }) {
   const { displayName, type, role, roomId } = useParams();
   const { clearRoom, addMember } = useSocket();
 
@@ -14,6 +14,7 @@ export default function Header({ members }) {
 
   const showGroupMembersHandler = () => {
     setDisplay("showGroupMembers");
+    setChatInputDisplay(false);
   };
 
   const onSelectUser = (userId) => {
@@ -24,12 +25,21 @@ export default function Header({ members }) {
   const [display, setDisplay] = useState("");
 
   useEffect(() => {
+    if (display === "showGroupMembers") {
+      setChatInputDisplay(false);
+    } else {
+      setChatInputDisplay(true);
+    }
+  }, [display]);
+
+
+  useEffect(() => {
     setDisplay("");
   }, [roomId]);
 
   return (
     <>
-      <div className="flex flex-col sticky top-0">
+      <div className={`flex flex-col sticky top-0 ${display !== "" ? "backdrop-blur-xl bg-white/20 border border-white/30" : ""} `}>
         <ul className="flex  justify-between items-center p-1 bg-zinc-900 w-full">
           <li className="font-serif text-[#c0d6c2] font-bold text-xl">
             {displayName}
@@ -39,7 +49,10 @@ export default function Header({ members }) {
               role === "admin" &&
               (display === "showSearchbar" ? (
                 <li
-                  onClick={() => setDisplay("")}
+                  onClick={() => {
+                    setDisplay("");
+                    
+                  }}
                   className="text-white cursor-pointer mr-2 bg-slate-200 hover:bg-slate-400 px-1 py-1 rounded-lg hover:animate-pulse  h-6 w-6"
                 >
                   <img src="/assets/close.svg" alt="close" />
@@ -52,11 +65,13 @@ export default function Header({ members }) {
                   <img src="/assets/addFriend.svg" alt="add friend" />
                 </li>
               ))}
-            {
-              type === "group" &&
+            {type === "group" &&
               (display === "showGroupMembers" ? (
                 <li
-                  onClick={() => setDisplay("")}
+                  onClick={() => {
+                    setDisplay("");
+                    setChatInputDisplay(true);
+                  }}
                   className="text-white cursor-pointer mr-2 bg-slate-200 hover:bg-slate-400 px-1 py-1 rounded-lg hover:animate-pulse  h-6 w-6"
                 >
                   <img src="/assets/close.svg" alt="close" />
@@ -68,8 +83,7 @@ export default function Header({ members }) {
                 >
                   <img src="/assets/group.svg" alt="delete" />
                 </li>
-              ))
-            }
+              ))}
 
             <li
               onClick={deleteChatsHandler}
@@ -92,12 +106,17 @@ export default function Header({ members }) {
             <span>Image by vector_corp on Freepik</span>
           </a>
         )}
-        <div className="sticky top-14 right-0 w-full relative">
+        <div className="sticky top-14 w-full relative">
           {display === "showSearchbar" && (
             <Searchbar onSelectUser={onSelectUser} />
           )}
-          {display === "showGroupMembers" && <GroupMembers members={members} />}
         </div>
+
+        {display === "showGroupMembers" && (
+          <div className="flex flex-col mx-auto flex-1 w-2/5 bg-slate-100 text-slate-900 overflow-y-auto">
+            <GroupMembers members={members} />
+          </div>
+        )}
       </div>
     </>
   );
