@@ -179,6 +179,8 @@ export const socket_chat = (socket, io) => {
     try {
 
       await delete_room_service(room_id, user_id);
+      io.to(room_id).emit("room:deleted", { room_id });
+      
       const sockets = await io.in(room_id).fetchSockets();
       sockets.forEach(s => s.leave(room_id));
     } catch {
