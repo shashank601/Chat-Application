@@ -66,18 +66,19 @@ export default function SidebarContainer() {
 
   // refetch on room created notification
   useEffect(() => {
-    const roomCreatedHandler = () => {
-      fetchRooms();
+    const roomCreatedHandler = async () => {
+      const response = await fetchRooms();
+      console.log(response);
     };
 
     const remove = onRoomCreated(roomCreatedHandler);
     return () => remove();
   }, [onRoomCreated, fetchRooms]);
 
-  // refetch on user added notification
+  // refetch on user added notification, i see a PROBLEM here: nothing happens after fetch room
   useEffect(() => {
-    const memberAddedHandler = ({ room_id, member_id }) => {
-      fetchRooms();
+    const memberAddedHandler = async ({ room_id, member_id }) => {
+      await fetchRooms();
     };
 
     const remove = onMemberAdded(memberAddedHandler);

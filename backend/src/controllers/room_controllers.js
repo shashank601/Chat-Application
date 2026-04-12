@@ -21,7 +21,7 @@ export const create_room = async_handler(async (req, res) => {
     const userRoom = String(user_id);
     req.io.to(userRoom).emit('room:created', room);
 
-    if (room.type === 'direct' && receiver_id) {
+    if (receiver_id) {
         const receiverRoom = String(receiver_id);
         req.io.to(receiverRoom).emit('room:created', room);
     }
