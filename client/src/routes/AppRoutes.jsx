@@ -8,6 +8,7 @@ import ChatPanel from "../containers/ChatPanel";
 import RequireAuth from "../utils/RequireAuth";
 import GuestRoute from "../utils/GuestRoute";
 import { SocketProvider } from "../context/SocketContext";
+import RequireRoomAccess from "../utils/RequireRoomAccess";
 
 export default function AppRoutes() {
   return (
@@ -28,7 +29,11 @@ export default function AppRoutes() {
         }
       >
         <Route index element={<Home />} />
-        <Route path=":type/:role/:displayName/:roomId" element={<ChatPanel />} />
+        <Route path=":type/:role/:displayName/:roomId" element={
+          <RequireRoomAccess>
+            <ChatPanel />
+          </RequireRoomAccess>
+        } />
       </Route>
 
 

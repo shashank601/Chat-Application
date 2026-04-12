@@ -11,7 +11,8 @@ export default function GroupMembers({members}) {
             <h1 className="text-lg font-bold p-3 border-b-1 ">Members</h1>
             <ul>
                 {members.map((member) => (
-                    <li key={member.user_id} className=" border-b-1">
+                
+                    <li key={member.user_id || member.id} className=" border-b-1">
                         <div className="flex justify-between p-2 hover:bg-slate-200  ">
                             <div className="flex items-center gap-2">
                                 <span>{member.username}</span>

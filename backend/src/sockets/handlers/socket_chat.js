@@ -233,7 +233,10 @@ export const socket_chat = (socket, io) => {
       );
 
       io.to(room_id).emit("member:added", { room_id, member_id, role: result_row.role, username: result_row.username });
-    } catch {
+      
+      io.to(String(member_id)).emit("member:added", { room_id, member_id, role: result_row.role, username: result_row.username });
+
+    } catch(error) {
       return socket.emit("error", {
         type: "room:add_member",
         message: "Server error",

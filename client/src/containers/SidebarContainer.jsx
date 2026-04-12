@@ -89,9 +89,11 @@ export default function SidebarContainer() {
   }, [fetchRooms]);
 
   useEffect(() => {
-    const roomDeletedHandler = (room_id) => {
+    const roomDeletedHandler = ({ room_id }) => {
+      console.log("Sidebar: room:deleted received", { room_id });
+      console.log( rooms); 
       setRooms((prevRooms) =>
-        prevRooms.filter((room) => room.room_id !== room_id),
+        prevRooms.filter((room) => String(room.room_id) !== String(room_id)),
       );
     };
 

@@ -2,11 +2,13 @@ import { useParams } from "react-router-dom";
 import { useSocket } from "../../context/SocketContext";
 import Searchbar from "../Searchbar.jsx";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import GroupMembers from "../../containers/GroupMembers";
 
 export default function Header({ members, setChatInputDisplay }) {
   const { displayName, type, role, roomId } = useParams();
-  const { clearRoom, addMember } = useSocket();
+  const { clearRoom, addMember, deleteRoom } = useSocket();
+  const navigate = useNavigate();
 
   const deleteChatsHandler = async () => {
     await clearRoom(roomId);
@@ -17,9 +19,22 @@ export default function Header({ members, setChatInputDisplay }) {
     setChatInputDisplay(false);
   };
 
-  const onSelectUser = (userId) => {
+  const onSelectUser = async (userId) => {
+    try {
+      await addMember(roomId, userId);
+    } catch (error) {
+      console.error("Error adding member:", error);
+    }
     setDisplay("");
-    addMember(roomId, userId);
+  };
+
+  const roomDeleteHandler = async () => {
+    try {
+      await deleteRoom(roomId);
+      navigate("/chat");
+    } catch (error) {
+      console.error("Error deleting room:", error);
+    }
   };
 
   const [display, setDisplay] = useState("");
@@ -32,14 +47,15 @@ export default function Header({ members, setChatInputDisplay }) {
     }
   }, [display]);
 
-
   useEffect(() => {
     setDisplay("");
   }, [roomId]);
 
   return (
     <>
-      <div className={`flex flex-col sticky top-0 ${display !== "" ? "backdrop-blur-xl bg-white/20 border border-white/30" : ""} `}>
+      <div
+        className={`flex flex-col sticky top-0 ${display !== "" ? "backdrop-blur-xl bg-white/20 border border-white/30" : ""} `}
+      >
         <ul className="flex  justify-between items-center p-1 bg-zinc-900 w-full">
           <li className="font-serif text-[#c0d6c2] font-bold text-xl">
             {displayName}
@@ -51,7 +67,6 @@ export default function Header({ members, setChatInputDisplay }) {
                 <li
                   onClick={() => {
                     setDisplay("");
-                    
                   }}
                   className="text-white cursor-pointer mr-2 bg-slate-200 hover:bg-slate-400 px-1 py-1 rounded-lg hover:animate-pulse  h-6 w-6"
                 >
@@ -92,7 +107,10 @@ export default function Header({ members, setChatInputDisplay }) {
               <img src="/assets/chatDelete.svg" alt="delete" />
             </li>
 
-            <li className="text-white cursor-pointer bg-slate-100 hover:bg-orange-500 px-1 py-1 rounded-xl hover:animate-pulse h-6 w-6">
+            <li
+              onClick={roomDeleteHandler}
+              className="text-white cursor-pointer bg-slate-100 hover:bg-orange-500 px-1 py-1 rounded-xl hover:animate-pulse h-6 w-6"
+            >
               <img src="/assets/roomDelete.svg" alt="delete" />
             </li>
           </ul>
@@ -101,7 +119,7 @@ export default function Header({ members, setChatInputDisplay }) {
           <div
             className="text-[#000] text-[10px] bg-gradient-to-r from-slate-200 "
             href="https://www.freepik.com/free-vector/app-icon-doodle-pattern_363621845.htm#fromView=search&page=3&position=44&uuid=e8c953a4-381c-4aeb-abd0-b0f4890a4988&query=chat+pattern"
-          > 
+          >
             <a href="https://www.freepik.com/free-vector/app-icon-doodle-pattern_363621845.htm#fromView=search&page=3&position=44&uuid=e8c953a4-381c-4aeb-abd0-b0f4890a4988&query=chat+pattern">
               <span className="font-bold">credits: </span>
               <span>Image by vector_corp on Freepik</span>
