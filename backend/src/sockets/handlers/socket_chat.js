@@ -102,7 +102,7 @@ export const socket_chat = (socket, io) => {
       !room_id ||
       typeof room_id !== "string" ||
       !message_id ||
-      typeof message_id !== "string"
+      (typeof message_id !== "string" && typeof message_id !== "number")
     ) {
       return socket.emit("error", {
         type: "message:delete",
@@ -111,7 +111,7 @@ export const socket_chat = (socket, io) => {
     }
 
     try {
-      const allowed = await is_user_in_room_service(room_id, user_id);
+      const allowed = await is_user_in_room_service(room_id, String(user_id));
 
       if (!allowed) {
         return socket.emit("error", {
@@ -120,7 +120,7 @@ export const socket_chat = (socket, io) => {
         });
       }
 
-      const message = await delete_message_service(message_id, user_id);
+      const message = await delete_message_service(String(message_id), String(user_id));
 
       if (!message || message.length === 0) {
         return socket.emit("error", {

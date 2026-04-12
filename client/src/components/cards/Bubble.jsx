@@ -1,4 +1,4 @@
-export default function Bubble({ senderName, content, createdAt, isMine }) {
+export default function Bubble({ id, senderName, content, createdAt, isMine, onDelete }) {
   return (
     <div className={`flex w-full ${isMine ? "justify-end" : "justify-start"}`}>
       <div
@@ -8,7 +8,10 @@ export default function Bubble({ senderName, content, createdAt, isMine }) {
       >
         <div className="flex justify-between items-center gap-1">
           <div className="font-serif text-[12px] text-gray-300">{senderName}</div>
-          <div className={ `${isMine ? "" : "hidden"}`}>
+          <div onClick={() => {
+            onDelete(id)
+        
+            }} className={ `${isMine ? "" : "hidden"}`}>
             <img src="/assets/chatDeleteWhite.svg" alt="delete" className="w-3 h-3 text-slate-100 hover:opacity-80 cursor-pointer" />
           </div>
         </div>

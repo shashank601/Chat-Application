@@ -16,7 +16,7 @@ export default function ChatPanel() {
   const [chatData, setChatData] = useState(null);
   const [members, setMembers] = useState([]);
 
-  const { sendMessage, onReceiveMessage, joinRoom, onRoomCleared, onMemberAdded } = useSocket();
+  const { sendMessage, onReceiveMessage, joinRoom, onRoomCleared, onMemberAdded, deleteMessage, onMessageDeleted } = useSocket();
 
   const { roomId } = useParams();
   useEffect(() => {
@@ -99,6 +99,26 @@ export default function ChatPanel() {
 
   const [chatInputDisplay, setChatInputDisplay] = useState(false);
 
+  
+  const onDeleteMessage = async (messageId) => {
+    try {
+      await deleteMessage(roomId, messageId);
+    } catch(error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    const onMessageDeletedHandler = (messageId) => {
+      setChatData((prev) => prev.filter((msg) => msg.id !== messageId));
+    };
+    const off = onMessageDeleted(onMessageDeletedHandler);
+    return () => {
+      off();
+    };
+  }, [onMessageDeleted]);
+
+
   return (
     <>
       <Header members={members} setChatInputDisplay={setChatInputDisplay} />
@@ -110,7 +130,7 @@ export default function ChatPanel() {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            chatData && chatData.map((msg) => <Bubble key={msg.id} {...msg} />)
+            chatData && chatData.map((msg) => <Bubble key={msg.id} {...msg} onDelete={onDeleteMessage}/>)
           )}
         </div>
         {

@@ -107,12 +107,14 @@ export default function Header({ members, setChatInputDisplay }) {
               <img src="/assets/chatDelete.svg" alt="delete" />
             </li>
 
-            {role === "admin" && (<li
-              onClick={roomDeleteHandler}
-              className="text-white cursor-pointer bg-slate-100 hover:bg-orange-500 px-1 py-1 rounded-xl hover:animate-pulse h-6 w-6"
-            >
-              <img src="/assets/roomDelete.svg" alt="delete" />
-            </li>)}
+            {(role === "admin" && type === "group") || type === "direct" ? (
+              <li
+                onClick={roomDeleteHandler}
+                className="text-white cursor-pointer bg-slate-100 hover:bg-orange-500 px-1 py-1 rounded-xl hover:animate-pulse h-6 w-6"
+              >
+                <img src="/assets/roomDelete.svg" alt="delete" />
+              </li>
+            ) : null}
           </ul>
         </ul>
         {display === "" && (
