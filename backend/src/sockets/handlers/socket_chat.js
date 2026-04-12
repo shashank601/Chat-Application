@@ -7,6 +7,7 @@ import {
 import {
   is_user_in_room_service,
   delete_room_service,
+  get_room_members_ids_service,
 } from "../../services/room_services.js";
 import { check_user_exists_service } from "../../services/user_service.js";
 import {
@@ -177,10 +178,15 @@ export const socket_chat = (socket, io) => {
     }
 
     try {
+      const memberRows = await get_room_members_ids_service(room_id);
 
       await delete_room_service(room_id, user_id);
       io.to(room_id).emit("room:deleted", { room_id });
-      
+
+      memberRows.forEach(({ user_id: uid }) => {
+        if (uid) io.to(String(uid)).emit("room:deleted", { room_id });
+      });
+
       const sockets = await io.in(room_id).fetchSockets();
       sockets.forEach(s => s.leave(room_id));
     } catch {

@@ -34,6 +34,9 @@ export const get_room = `
     FROM rooms
     WHERE room_id = $1;
 `
+export const get_room_members_ids = `
+    SELECT user_id FROM members WHERE room_id = $1
+`
 
 
 export const check_admin = `

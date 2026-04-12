@@ -10,7 +10,8 @@ import {
     delete_direct_room as delete_direct_room_query,
     delete_group_room as delete_group_room_query,
     get_room as get_room_query,
-    check_admin as check_admin_query
+    check_admin as check_admin_query,
+    get_room_members_ids as get_room_members_ids_query
 } from "../db/queries.js";
 
 
@@ -129,4 +130,10 @@ export const is_user_in_room_service = async (room_id, user_id) => {
     
     const result = await pool.query(is_user_in_room_query, [room_id, user_id]);
     return result.rows[0] || null;
+}
+
+
+export const get_room_members_ids_service = async (room_id) => {
+    const result = await pool.query(get_room_members_ids_query, [room_id]);
+    return result.rows;
 }

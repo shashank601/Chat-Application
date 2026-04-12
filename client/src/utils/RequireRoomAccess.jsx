@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { getMyRooms } from "../services/RoomService";
 import { useAuth } from "../context/AuthContext";
+import { useSocket } from "../context/SocketContext";
 
 export default function RequireRoomAccess({ children }) {
   const { roomId } = useParams();
   const { user, loading } = useAuth();
+  const { onRoomDeleted } = useSocket();
   const [valid, setValid] = useState(null);
   const [hasError, setHasError] = useState(false);
 
@@ -27,6 +29,15 @@ export default function RequireRoomAccess({ children }) {
 
     check();
   }, [roomId, loading, user]);
+
+  useEffect(() => {
+    if (loading || !user) return;
+    const handler = ({ room_id }) => {
+      if (String(room_id) === String(roomId)) setValid(false);
+    };
+    const off = onRoomDeleted(handler);
+    return () => off();
+  }, [onRoomDeleted, roomId, loading, user]);
 
   if (loading) return null;
   if (!user) return <Navigate to="/login" />;
