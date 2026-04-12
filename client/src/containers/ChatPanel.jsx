@@ -109,7 +109,8 @@ export default function ChatPanel() {
   };
 
   useEffect(() => {
-    const onMessageDeletedHandler = (messageId) => {
+    const onMessageDeletedHandler = (data) => {
+      const messageId = (typeof data === 'object') ? data.messageId : data;
       setChatData((prev) => prev.filter((msg) => msg.id !== messageId));
     };
     const off = onMessageDeleted(onMessageDeletedHandler);

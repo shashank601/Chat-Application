@@ -129,7 +129,12 @@ export const socket_chat = (socket, io) => {
         });
       }
 
-      io.to(room_id).emit("message:deleted", message_id);
+      const deletedMessage = message[0];
+      
+      io.to(room_id).emit("message:deleted", { 
+        messageId: deletedMessage.msg_id, 
+        roomId: deletedMessage.room_id 
+      });
     } catch {
       return socket.emit("error", {
         type: "message:delete",

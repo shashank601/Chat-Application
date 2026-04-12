@@ -119,6 +119,16 @@ export const search_user = `
 `
 
 export const get_my_rooms = `
+    WITH latest_msg AS (
+        SELECT 
+            room_id,
+            msg_id,
+            content,
+            created_at,
+            ROW_NUMBER() OVER (PARTITION BY room_id ORDER BY created_at DESC) as rn
+        FROM messages 
+        WHERE is_deleted = FALSE
+    )
     SELECT 
         m.room_id,
         CASE 
@@ -127,14 +137,14 @@ export const get_my_rooms = `
         END AS display_name,
         r.type,
         m.role,
-        msg.content AS last_msg,
-        msg.created_at AS last_msg_at
+        lm.content AS last_msg,
+        lm.created_at AS last_msg_at
     FROM members m
     JOIN rooms r 
         ON m.room_id = r.room_id
 
-    LEFT JOIN messages msg 
-        ON r.last_msg_ref = msg.msg_id
+    LEFT JOIN latest_msg lm 
+        ON m.room_id = lm.room_id AND lm.rn = 1
 
     LEFT JOIN members dm 
         ON r.type = 'direct' 
@@ -145,7 +155,7 @@ export const get_my_rooms = `
         ON dm.user_id = u.user_id
 
     WHERE m.user_id = $1
-    ORDER BY msg.created_at DESC NULLS LAST;
+    ORDER BY lm.created_at DESC NULLS LAST;
 `
 
 export const check_user_exists = `
@@ -196,7 +206,7 @@ export const delete_message = `
     UPDATE messages
     SET is_deleted = TRUE
     WHERE msg_id = $1 AND sender_id = $2
-    RETURNING msg_id;
+    RETURNING msg_id, room_id;
 `
 
 export const clear_room = `

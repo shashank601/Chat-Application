@@ -17,6 +17,7 @@ export default function SidebarContainer() {
     onRoomDeleted,
     onRoomCleared,
     onMemberAdded,
+    onMessageDeleted,
   } = useSocket();
   const navigate = useNavigate();
   const { user, setUser } = useAuth();
@@ -132,6 +133,17 @@ export default function SidebarContainer() {
       console.log(err);
     }
   };
+
+   useEffect(() => {
+    const onMessageDeletedHandler = (data) => {
+    
+      fetchRooms();
+    };
+    const off = onMessageDeleted(onMessageDeletedHandler);
+    return () => {
+      off();
+    };
+  }, [onMessageDeleted, fetchRooms]);
 
   const [display, setDisplay] = useState(false);
   const [groupName, setGroupName] = useState("");
