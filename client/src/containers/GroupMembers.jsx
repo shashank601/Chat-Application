@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { getRoomMembers } from "../services/RoomService";
 import { useAuth } from "../context/AuthContext";
+import { useParams } from "react-router-dom";
 
 export default function GroupMembers({members}) {
-
     const {user} = useAuth();
 
     return (
@@ -11,7 +11,7 @@ export default function GroupMembers({members}) {
             <h1 className="text-lg font-bold p-3 border-b-1 ">Members</h1>
             <ul>
                 {members.map((member) => (
-                
+                    console.log(member),
                     <li key={member.user_id || member.id} className=" border-b-1">
                         <div className="flex justify-between p-2 hover:bg-slate-200  ">
                             <div className="flex items-center gap-2">
@@ -26,3 +26,5 @@ export default function GroupMembers({members}) {
         </div>
     );
 }
+
+//Minor bug: when one group's  member list is open and then someone add me to another group then my opened list get <li> gets corrupted (with wrong id)
