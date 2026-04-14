@@ -22,11 +22,7 @@ const requiredEnv = [
   "JWT_SECRET",
   "CLIENT_URL",
   "JWT_EXPIRES_IN",
-  "PGHOST",
-  "PGPORT",
-  "PGUSER",
-  "PGPASSWORD",
-  "PGDATABASE"
+  "DATABASE_URL"
 ];
 
 const missing = requiredEnv.filter(key => !process.env[key]);
