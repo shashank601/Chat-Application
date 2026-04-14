@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { getMyRooms, createRoom } from "../services/RoomService.js";
-import Searchbar from "../components/Searchbar.jsx";
+import Searchbar from "../components/searchbar.jsx";
 import SidebarItem from "../components/cards/SidebarItem.jsx";
 import { mapRoom } from "../mapper/mapGetRoom.js";
 import { useSocket } from "../context/SocketContext.jsx";

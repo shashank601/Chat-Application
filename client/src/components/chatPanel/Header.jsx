@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useSocket } from "../../context/SocketContext";
-import Searchbar from "../Searchbar.jsx";
+import Searchbar from "../searchbar.jsx";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import GroupMembers from "../../containers/GroupMembers";
