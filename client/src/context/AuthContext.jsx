@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
     if (token) {
       Verify()
         .then((res) => {
-          setUser(res.data);
+          setUser(res.data.data);
         })
         .catch((err) => {
           clearToken();

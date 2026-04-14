@@ -15,12 +15,12 @@ export default function RegisterButton({email, password, username}) {
 			const signupResponse = await Signup({email, password, username});
             console.log(signupResponse.data);
             
-            if (signupResponse.data.token) {
-                setToken(signupResponse.data.token);
+            if (signupResponse.data.data?.token) {
+                setToken(signupResponse.data.data.token);
             }
 
             const verifyResponse = await Verify();
-            setUser(verifyResponse.data);
+            setUser(verifyResponse.data.data);
             navigate('/chat');
 		} catch (err) {
 			console.error(err);

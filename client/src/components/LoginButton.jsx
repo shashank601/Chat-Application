@@ -13,11 +13,11 @@ export default function LoginButton({email, password}) {
 		setLoading(true);
 		try {
 			const response = await Login({email, password});
-			setToken(response.data.token);
+			setToken(response.data.data.token);
 			
 			// Get user data after setting token
 			const userResponse = await Verify();
-			setUser(userResponse.data);
+			setUser(userResponse.data.data);
 			
 			navigate('/chat');
 		} catch (err) {
