@@ -27,7 +27,7 @@ export const add_message = async_handler(async (req, res) => {
     
     const message = await add_message_service(room_id, sender_id, content);
     if (!message) {
-        const err = new Error('Failed to create message');
+        const err = new Error('Message could not be created, database returned nothing');
         err.code = 500;
         throw err;
     }

@@ -10,7 +10,7 @@ export const SocketProvider = ({ children }) => {
 
   if (!socketRef.current) {
     // create an instance, do not autoconn
-    socketRef.current = io("http://localhost:5000", { autoConnect: false });
+    socketRef.current = io(import.meta.env.VITE_SOCKET_URL || "http://localhost:5000", { autoConnect: false });
   }
 
   useEffect(() => {

@@ -5,7 +5,7 @@ export const socket_auth = (io) => {
         const authHeader = socket.handshake.auth?.token;
 
         if (!authHeader)
-            return next(new Error("No token"));
+            return next(new Error("Authentication token is required"));
 
         const token = authHeader;
         try {
@@ -13,7 +13,9 @@ export const socket_auth = (io) => {
             socket.user_id = decoded.user_id;
             next();
         } catch (error) {
-            return next(new Error("Authentication error"));
+            if (error.name === 'TokenExpiredError')
+                return next(new Error("Token expired"));
+            return next(new Error("Invalid authentication token"));
         }
     });
 }

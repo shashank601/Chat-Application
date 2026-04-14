@@ -60,8 +60,10 @@ export const create_room_service = async (receiver_id, group_name, user_id) => {
 
     } catch (err) {
         await client.query('ROLLBACK');
-        // err.code = 500;
-        // err.message = 'Failed to create room';
+        if (!Number.isInteger(err.code)) {
+            err.code = 500;
+            err.message = 'Failed to create room';
+        }
         throw err; 
     } finally {
         client.release();

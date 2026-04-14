@@ -13,7 +13,7 @@ import {
 export const login = async_handler(async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
-        const err = new Error('email and password are required');
+        const err = new Error('Email and password are required');
         err.code = 400;
         throw err;
     }
@@ -21,7 +21,7 @@ export const login = async_handler(async (req, res) => {
     const result = await pool.query(login_query, [email]); // get hashed pwd to compare
 
     if (result.rows.length === 0) {
-        const err = new Error('invalid credentials');
+        const err = new Error('Invalid email or password');
         err.code = 401;
         throw err;
     }
@@ -29,7 +29,7 @@ export const login = async_handler(async (req, res) => {
     const user = result.rows[0];
     const isMatch = await bcrypt.compare(password, user.pwd);
     if (!isMatch) {
-        const err = new Error('invalid credentials');
+        const err = new Error('Invalid email or password');
         err.code = 401;
         throw err;
     }
@@ -40,7 +40,7 @@ export const login = async_handler(async (req, res) => {
         { expiresIn: process.env.JWT_EXPIRES_IN }
     );
 
-    res.status(200).json({ token });
+    res.status(200).json({ success: true, data: { token } });
 });
 
 
@@ -49,7 +49,7 @@ export const register = async_handler(async (req, res) => {
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-        const err = new Error('missing required fields');
+        const err = new Error('Name, email, and password are required');
         err.code = 400;
         throw err;
     }
@@ -74,7 +74,7 @@ export const register = async_handler(async (req, res) => {
         { expiresIn: process.env.JWT_EXPIRES_IN }
     );
 
-    res.status(201).json({ token });
+    res.status(201).json({ success: true, data: { token } });
     
     
 });
@@ -82,5 +82,5 @@ export const register = async_handler(async (req, res) => {
 
 export const verify = (req, res) => {
     
-    res.json({ id: req.user_id });
+    res.status(200).json({ success: true, data: { id: req.user_id } });
 }

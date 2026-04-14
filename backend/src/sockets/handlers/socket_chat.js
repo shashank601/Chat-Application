@@ -30,7 +30,7 @@ export const socket_chat = (socket, io) => {
     if (!room_id || typeof room_id !== "string") {
       return socket.emit("error", {
         type: "room:join",
-        message: "Invalid payload",
+        message: "room_id is required and must be a string",
       });
     }
 
@@ -45,10 +45,10 @@ export const socket_chat = (socket, io) => {
       }
       // user notification room is joined on connect
       socket.join(room_id);
-    } catch {
+    } catch (err) {
       return socket.emit("error", {
         type: "room:join",
-        message: "Server error",
+        message: err.message || "Failed to join room",
       });
     }
   });
@@ -66,7 +66,7 @@ export const socket_chat = (socket, io) => {
     ) {
       return socket.emit("error", {
         type: "message:send",
-        message: "Invalid message",
+        message: "room_id and a non-empty message are required",
       });
     }
 
@@ -87,10 +87,10 @@ export const socket_chat = (socket, io) => {
       const userRows = await check_user_exists_service(user_id);
       const user = userRows[0];
       io.to(room_id).emit("message:new", { ...message, sender_name: user.username });
-    } catch {
+    } catch (err) {
       return socket.emit("error", {
         type: "message:send",
-        message: "Server error",
+        message: err.message || "Failed to send message",
       });
     }
   });
@@ -106,7 +106,7 @@ export const socket_chat = (socket, io) => {
     ) {
       return socket.emit("error", {
         type: "message:delete",
-        message: "Invalid payload",
+        message: "room_id and message_id are required",
       });
     }
 
@@ -135,10 +135,10 @@ export const socket_chat = (socket, io) => {
         messageId: deletedMessage.msg_id, 
         roomId: deletedMessage.room_id 
       });
-    } catch {
+    } catch (err) {
       return socket.emit("error", {
         type: "message:delete",
-        message: "Server error",
+        message: err.message || "Failed to delete message",
       });
     }
   });
@@ -149,7 +149,7 @@ export const socket_chat = (socket, io) => {
     if (!room_id || typeof room_id !== "string") {
       return socket.emit("error", {
         type: "room:clear",
-        message: "Invalid payload",
+        message: "room_id is required and must be a string",
       });
     }
 
@@ -164,10 +164,10 @@ export const socket_chat = (socket, io) => {
       }
 
       io.to(room_id).emit("room:cleared", { room_id });
-    } catch {
+    } catch (err) {
       return socket.emit("error", {
         type: "room:clear",
-        message: "Server error",
+        message: err.message || "Failed to clear room",
       });
     }
   });
@@ -178,7 +178,7 @@ export const socket_chat = (socket, io) => {
     if (!room_id || typeof room_id !== "string") {
       return socket.emit("error", {
         type: "room:delete",
-        message: "Invalid payload",
+        message: "room_id is required and must be a string",
       });
     }
 
@@ -194,10 +194,10 @@ export const socket_chat = (socket, io) => {
 
       const sockets = await io.in(room_id).fetchSockets();
       sockets.forEach(s => s.leave(room_id));
-    } catch {
+    } catch (err) {
       return socket.emit("error", {
         type: "room:delete",
-        message: "Server error",
+        message: err.message || "Failed to delete room",
       });
     }
   });
@@ -208,7 +208,7 @@ export const socket_chat = (socket, io) => {
     if (!room_id || typeof room_id !== "string") {
       return socket.emit("error", {
         type: "room:leave",
-        message: "Invalid payload",
+        message: "room_id is required and must be a string",
       });
     }
 
@@ -219,10 +219,10 @@ export const socket_chat = (socket, io) => {
 
       socket.emit("room:left", result);
       socket.to(room_id).emit("member:left", { room_id, user_id });
-    } catch {
+    } catch (err) {
       return socket.emit("error", {
         type: "room:leave",
-        message: "Server error",
+        message: err.message || "Failed to leave room",
       });
     }
   });
@@ -233,7 +233,7 @@ export const socket_chat = (socket, io) => {
     if (!room_id || !member_id) {
       return socket.emit("error", {
         type: "room:add_member",
-        message: "Invalid payload",
+        message: "room_id and member_id are required",
       });
     }
     try {
@@ -247,10 +247,10 @@ export const socket_chat = (socket, io) => {
       
       io.to(String(member_id)).emit("member:added", { room_id, member_id, role: result_row.role, username: result_row.username });
 
-    } catch(error) {
+    } catch (err) {
       return socket.emit("error", {
         type: "room:add_member",
-        message: "Server error",
+        message: err.message || "Failed to add member",
       });
     }
   });
@@ -261,7 +261,7 @@ export const socket_chat = (socket, io) => {
     if (!room_id || !member_id) {
       return socket.emit("error", {
         type: "room:promote_member",
-        message: "Invalid payload",
+        message: "room_id and member_id are required",
       });
     }
     try {
@@ -272,10 +272,10 @@ export const socket_chat = (socket, io) => {
       );
 
       io.to(room_id).emit("member:promoted", { room_id, member_id, role: result_row.role });
-    } catch {
+    } catch (err) {
       return socket.emit("error", {
         type: "room:promote_member",
-        message: "Server error",
+        message: err.message || "Failed to promote member",
       });
     }
   });
