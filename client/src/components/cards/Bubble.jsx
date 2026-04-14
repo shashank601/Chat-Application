@@ -12,7 +12,7 @@ export default function Bubble({ id, senderName, content, createdAt, isMine, onD
             onDelete(id)
         
             }} className={ `${isMine ? "" : "hidden"}`}>
-            <img src="/assets/chatDeleteWhite.svg" alt="delete" className="w-3 h-3 text-slate-100 hover:opacity-80 cursor-pointer" />
+            <img title="delete" src="/assets/chatDeleteWhite.svg" alt="delete" className="w-3 h-3 text-slate-100 hover:opacity-80 cursor-pointer" />
           </div>
         </div>
 

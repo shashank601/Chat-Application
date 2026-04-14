@@ -77,7 +77,7 @@ export default function Header({ members, setChatInputDisplay }) {
                   onClick={() => setDisplay("showSearchbar")}
                   className="text-white cursor-pointer mr-2 bg-slate-200 hover:bg-slate-400 px-1 py-1 rounded-lg hover:animate-pulse  h-6 w-6"
                 >
-                  <img src="/assets/addFriend.svg" alt="add friend" />
+                  <img title="add member" src="/assets/addFriend.svg" alt="add friend" />
                 </li>
               ))}
             {type === "group" &&
@@ -96,7 +96,7 @@ export default function Header({ members, setChatInputDisplay }) {
                   onClick={showGroupMembersHandler}
                   className="text-white cursor-pointer bg-slate-100 hover:bg-slate-200 px-1 py-1 rounded-lg hover:animate-pulse mr-2 h-6 w-6"
                 >
-                  <img src="/assets/group.svg" alt="delete" />
+                  <img title="view members" src="/assets/group.svg" alt="delete" />
                 </li>
               ))}
 
@@ -104,7 +104,7 @@ export default function Header({ members, setChatInputDisplay }) {
               onClick={deleteChatsHandler}
               className="text-white cursor-pointer bg-slate-100 hover:bg-slate-200 px-1 py-1 rounded-xl hover:animate-pulse mr-2 h-6 w-6"
             >
-              <img src="/assets/chatDelete.svg" alt="delete" />
+              <img title="clear chat" src="/assets/chatDelete.svg" alt="delete" />
             </li>
 
             {(role === "admin" && type === "group") || type === "direct" ? (
@@ -112,7 +112,7 @@ export default function Header({ members, setChatInputDisplay }) {
                 onClick={roomDeleteHandler}
                 className="text-white cursor-pointer bg-slate-100 hover:bg-orange-500 px-1 py-1 rounded-xl hover:animate-pulse h-6 w-6"
               >
-                <img src="/assets/roomDelete.svg" alt="delete" />
+                <img src="/assets/roomDelete.svg" title="delete room" alt="delete" />
               </li>
             ) : null}
           </ul>

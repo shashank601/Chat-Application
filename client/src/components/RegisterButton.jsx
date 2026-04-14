@@ -1,0 +1,36 @@
+import { Signup, Verify } from '../services/AuthService';
+import {useState, useEffect} from 'react'
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { setToken } from '../utils/Token.js';
+
+export default function RegisterButton({email, password, username}) {
+	const [loading, setLoading] = useState(false);
+	const navigate = useNavigate();
+	const {setUser} = useAuth();
+
+	const registerHandler = async () => {
+		setLoading(true);
+		try {
+			const signupResponse = await Signup({email, password, username});
+            console.log(signupResponse.data);
+            
+            if (signupResponse.data.token) {
+                setToken(signupResponse.data.token);
+            }
+
+            const verifyResponse = await Verify();
+            setUser(verifyResponse.data);
+            navigate('/chat');
+		} catch (err) {
+			console.error(err);
+		} finally {
+			setLoading(false);
+		}
+	}
+
+
+  return (
+    <button onClick={registerHandler} disabled={loading} className="p-2 bg-zinc-900 text-white  ">register</button>
+  )
+}

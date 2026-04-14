@@ -52,25 +52,26 @@ export default function ChatPanel() {
   }, [roomId]);
 
   useEffect(() => {
-    let isUnmounted = false;
+    let isCancelled = false;
 
     const fetchMessages = async () => {
       try {
         setLoading(true);
         const res = await getMessages(roomId);
-        if (!isUnmounted)
+        
+        if (!isCancelled)
           setChatData(res.data.map((msg) => mapMessage(msg, user.id)));
       } catch (error) {
         console.error(error);
       } finally {
-        if (!isUnmounted) setLoading(false);
+        if (!isCancelled) setLoading(false);
       }
     };
 
     fetchMessages();
 
     return () => {
-      isUnmounted = true;
+      isCancelled = true;
     };
   }, [roomId]);
 

@@ -10,10 +10,6 @@ import {
 
 
 
-
-
-
-
 export const login = async_handler(async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {

@@ -163,6 +163,7 @@ export default function SidebarContainer() {
               }}
             >
               <img
+                title="logout"
                 src="/assets/logout.svg"
                 alt="logout"
                 className="w-4 h-4 ml-1 mt-1"
