@@ -10,14 +10,16 @@ export const SocketProvider = ({ children }) => {
 
   if (!socketRef.current) {
     // create an instance, do not autoconn
-    socketRef.current = io(import.meta.env.VITE_SOCKET_URL || "http://localhost:5000", { autoConnect: false });
+    socketRef.current = io(import.meta.env.VITE_SOCKET_URL, {
+      autoConnect: false,
+      auth: { token: getToken() }
+    });
   }
 
   useEffect(() => {
     const s = socketRef.current;
 
     // now connect
-    s.auth = { token: getToken() };
     if (!s.connected) s.connect();
 
     // for status

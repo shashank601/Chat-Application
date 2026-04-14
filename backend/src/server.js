@@ -1,7 +1,7 @@
 import express from 'express'
 import error_handler from './middlewares/error_handler.js'
 import index_routes from './routes/index_routes.js'
-import cookie_parser from 'cookie-parser'
+import cookieParser from 'cookie-parser'
 import http from 'http';
 import dotenv from 'dotenv'
 import cors from 'cors'
@@ -9,40 +9,13 @@ import { Server } from 'socket.io';
 import { connect_db } from './config/connect_db.js';
 import { init_sockets } from './sockets/socket.js';
 import { pool } from './config/db.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
-const app = express();
 
-const httpServer = http.createServer(app);
-
-const io = new Server(httpServer, {
-  cors: {
-    origin: process.env.CLIENT_URL,
-    methods: ["GET", "POST"],
-    credentials: true,
-  }
-});
-
-init_sockets(io);
-
-app.use(express.json());
-app.use(cookie_parser());
-app.use(cors({
-  origin: process.env.CLIENT_URL || true,
-  credentials: true
-}));
-
-app.get('/health', (_, res) => {
-  res.send('OK');
-});
-
-app.use((req, res, next) => {
-  req.io = io;
-  next();
-});
-
-app.use('/api', index_routes);
-app.use(error_handler);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const requiredEnv = [
   "PORT",
@@ -63,11 +36,55 @@ if (missing.length > 0) {
   process.exit(1);
 }
 
+const CLIENT_URL = process.env.CLIENT_URL;
+
+const app = express();
+const httpServer = http.createServer(app);
+
+const io = new Server(httpServer, {
+  cors: {
+    origin: CLIENT_URL,
+    methods: ["GET", "POST", "DELETE"],
+    credentials: true,
+  }
+});
+
+init_sockets(io);
+
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors({
+  origin: CLIENT_URL,
+  credentials: true
+}));
+
+app.get('/health', (_, res) => {
+  res.send('OK');
+});
+
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
+app.use('/api', index_routes);
+
+const staticPath = path.join(__dirname, '../../client/dist');
+app.use(express.static(staticPath));
+
+app.use("/assets", express.static(path.join(__dirname, "public/assets")));
+
+app.use((req, res) => {
+  res.sendFile(path.join(staticPath, 'index.html'));
+});
+
+app.use(error_handler);
+
 (async () => {
   try {
     await connect_db();
 
-    const PORT = process.env.PORT || 3000;
+    const PORT = process.env.PORT || 5000;
 
     httpServer.listen(PORT, () => {
       console.log(`Server started on port ${PORT}`);
