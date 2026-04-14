@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import RegisterButton from "../components/RegisterButton";
+import { Link } from "react-router-dom";
+
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -34,6 +36,9 @@ export default function Register() {
         <RegisterButton email={email} password={password} username={username} />
 
         
+      </div>
+      <div>
+        <p><span className="font-semibold">Already have an account?</span> <Link to="/login"><span className="hover:text-blue-500">Login</span></Link></p>
       </div>
     </div>
   );

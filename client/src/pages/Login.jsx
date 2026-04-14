@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import LoginButton from '../components/LoginButton';
+import { Link } from 'react-router-dom';
 
 
 export default function Login() {
@@ -28,6 +29,10 @@ export default function Login() {
 
         {/* <button className="p-2 bg-zinc-900 text-white">login</button> */}
         <LoginButton email={email} password={password} />
+
+      </div>
+      <div>
+        <p><span className="font-semibold">Don't have an account?</span> <Link to="/register"><span className="hover:text-blue-500">Register</span></Link></p>
       </div>
     </div>
   );
