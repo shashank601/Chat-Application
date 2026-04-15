@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
-import { getMyRooms } from "../services/RoomService";
-import { useAuth } from "../context/AuthContext";
-import { useSocket } from "../context/SocketContext";
+import { getMyRooms } from "../services/RoomService.js";
+import { useAuth } from "../context/AuthContext.jsx";
+import { useSocket } from "../context/SocketContext.jsx";
 
 export default function RequireRoomAccess({ children }) {
   const { roomId } = useParams();

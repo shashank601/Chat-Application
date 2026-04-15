@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import RegisterButton from "../components/RegisterButton";
+import RegisterButton from "../components/RegisterButton.jsx";
 import { Link } from "react-router-dom";
 
 

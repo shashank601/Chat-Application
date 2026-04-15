@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { getRoomMembers } from "../services/RoomService";
-import { useAuth } from "../context/AuthContext";
+import { getRoomMembers } from "../services/RoomService.js";
+import { useAuth } from "../context/AuthContext.jsx";
 import { useParams } from "react-router-dom";
 
 export default function GroupMembers({members}) {

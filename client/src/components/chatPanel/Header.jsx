@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
-import { useSocket } from "../../context/SocketContext";
+import { useSocket } from "../../context/SocketContext.jsx";
 import Searchbar from "../searchbar.jsx";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import GroupMembers from "../../containers/GroupMembers";
+import GroupMembers from "../../containers/GroupMembers.jsx";
 
 export default function Header({ members, setChatInputDisplay }) {
   const { displayName, type, role, roomId } = useParams();

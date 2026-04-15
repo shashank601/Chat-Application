@@ -11,6 +11,7 @@ import { init_sockets } from './sockets/socket.js';
 import { pool } from './config/db.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 dotenv.config();
 
@@ -66,12 +67,13 @@ app.use((req, res, next) => {
 app.use('/api', index_routes);
 
 const staticPath = path.join(__dirname, '../../client/dist');
+
 app.use(express.static(staticPath));
 
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
-app.use((req, res) => {
-  res.sendFile(path.join(staticPath, 'index.html'));
+app.get("*", (req, res, next) => {
+  res.sendFile(path.join(staticPath, "index.html"));
 });
 
 app.use(error_handler);

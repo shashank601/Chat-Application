@@ -1,7 +1,7 @@
-import { Signup, Verify } from '../services/AuthService';
+import { Signup, Verify } from '../services/AuthService.js';
 import {useState, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext.jsx';
 import { setToken } from '../utils/Token.js';
 
 export default function RegisterButton({email, password, username}) {

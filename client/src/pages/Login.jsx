@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import LoginButton from '../components/LoginButton';
+import LoginButton from '../components/LoginButton.jsx';
 import { Link } from 'react-router-dom';
 
 

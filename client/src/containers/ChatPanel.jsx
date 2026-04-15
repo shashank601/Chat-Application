@@ -1,13 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { getMessages } from "../services/MessageService";
-import { getRoomMembers } from "../services/RoomService";
-import { mapMessage } from "../mapper/mapGetMessages";
-import { useAuth } from "../context/AuthContext";
-import Bubble from "../components/cards/Bubble";
-import ChatInput from "../components/ChatInput";
-import Header from "../components/chatPanel/Header";
-import { useSocket } from "../context/SocketContext";
+import { getMessages } from "../services/MessageService.js";
+import { getRoomMembers } from "../services/RoomService.js";
+import { mapMessage } from "../mapper/mapGetMessages.js";
+import { useAuth } from "../context/AuthContext.jsx";
+import Bubble from "../components/cards/Bubble.jsx";
+import ChatInput from "../components/ChatInput.jsx";
+import Header from "../components/chatPanel/Header.jsx";
+import { useSocket } from "../context/SocketContext.jsx";
 
 
 export default function ChatPanel() {

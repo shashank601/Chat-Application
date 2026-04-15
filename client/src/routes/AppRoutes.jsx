@@ -1,14 +1,14 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import AuthLayout from "../layouts/AuthLayout";
-import Register from "../pages/Register";
-import Login from "../pages/Login";
-import Home from "../pages/Home";
-import ChatAppLayout from "../layouts/ChatAppLayout";
-import ChatPanel from "../containers/ChatPanel";
-import RequireAuth from "../utils/RequireAuth";
-import GuestRoute from "../utils/GuestRoute";
-import { SocketProvider } from "../context/SocketContext";
-import RequireRoomAccess from "../utils/RequireRoomAccess";
+import AuthLayout from "../layouts/AuthLayout.jsx";
+import Register from "../pages/Register.jsx";
+import Login from "../pages/Login.jsx";
+import Home from "../pages/Home.jsx";
+import ChatAppLayout from "../layouts/ChatAppLayout.jsx";
+import ChatPanel from "../containers/ChatPanel.jsx";
+import RequireAuth from "../utils/RequireAuth.jsx";
+import GuestRoute from "../utils/GuestRoute.jsx";
+import { SocketProvider } from "../context/SocketContext.jsx";
+import RequireRoomAccess from "../utils/RequireRoomAccess.jsx";
 
 export default function AppRoutes() {
   return (
