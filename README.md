@@ -9,7 +9,7 @@ This is a full-stack chat app that combines:
 - Socket.IO for real-time messaging and live room updates
 
 ### Problem it solves
-Most “CRUD-only” chat demos feel slow because they require polling or refreshes. This app delivers a real chat experience: messages and room updates propagate instantly to connected clients.
+This app delivers a real chat experience: messages and room updates propagate instantly to connected clients. no pooling or refreshes
 
 ---
 
@@ -42,11 +42,7 @@ CLIENT_URL=http://localhost:5173
 JWT_SECRET=replace_me
 JWT_EXPIRES_IN=7d
 
-PGHOST=localhost
-PGPORT=5432
-PGUSER=postgres
-PGPASSWORD=postgres
-PGDATABASE=chat_app
+DATABASE_URL=replace_me
 ```
 
 Run migrations:
