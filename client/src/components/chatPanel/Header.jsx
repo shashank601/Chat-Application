@@ -61,6 +61,7 @@ export default function Header({ members, setChatInputDisplay }) {
             {displayName}
           </li>
           <ul className="flex justify-end gap-1">
+            
             {type === "group" &&
               role === "admin" &&
               (display === "showSearchbar" ? (
@@ -80,6 +81,8 @@ export default function Header({ members, setChatInputDisplay }) {
                   <img title="add member" src="/assets/addFriend.svg" alt="add friend" />
                 </li>
               ))}
+
+
             {type === "group" &&
               (display === "showGroupMembers" ? (
                 <li

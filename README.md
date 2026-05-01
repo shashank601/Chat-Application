@@ -1,5 +1,14 @@
 # Chat Application (REST + Realtime)
-
+<div align="center">
+  
+  ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+  ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+  ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+  ![Socket.IO](https://img.shields.io/badge/Socket.IO-010101?style=for-the-badge&logo=socket.io&logoColor=white)
+  ![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+  ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+  
+</div>
 ## Overview
 This is a full-stack chat app that combines:
 
@@ -14,9 +23,10 @@ This app delivers a real chat experience: messages and room updates propagate in
 ---
 
 ## Tech Stack
-- Frontend: React (Vite), React Router, Axios, TailwindCSS, Socket.IO Client
-- Backend: Node.js, Express, Socket.IO, JWT, bcrypt
-- Database: PostgreSQL
+
+- **Frontend:** React 19, Vite 8, React Router 7, TailwindCSS 4, Socket.IO Client 4.8
+- **Backend:** Node.js, Express 5, Socket.IO 4.8, JWT, bcryptjs
+- **Database:** PostgreSQL with node-pg-migrate
 
 ---
 
