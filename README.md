@@ -47,12 +47,12 @@ npm install
 Create `backend/.env`:
 ```env
 PORT=5000
-CLIENT_URL=http://localhost:5173
+CLIENT_URL=/
 
-JWT_SECRET=replace_me
+JWT_SECRET=your_jwt_secret_here
 JWT_EXPIRES_IN=7d
 
-DATABASE_URL=replace_me
+DATABASE_URL=postgresql://your_db_url_here
 ```
 
 Run migrations:
