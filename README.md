@@ -21,6 +21,78 @@ This is a full-stack chat app that combines:
 This app delivers a real chat experience: messages and room updates propagate instantly to connected clients. no pooling or refreshes
 
 ---
+## Product Walkthrough
+
+### Authentication Screens
+
+<table>
+  <tr>
+    <td><img width="400" alt="Screenshot 2026-05-02 011400" src="https://github.com/user-attachments/assets/57651f16-9749-4b32-b245-3ee6ac996383" /></td>
+    <td><img width="400" alt="Screenshot 2026-05-02 011347" src="https://github.com/user-attachments/assets/17874f85-91f7-4a63-bedf-7dd8323816ba" /></td>
+  </tr>
+</table> 
+
+---
+
+### User enters chat room, WebSocket connection starts.
+<img width="400" alt="Screenshot 2026-05-02 024136" src="https://github.com/user-attachments/assets/4ea2c0e6-2cc9-40e2-900b-f3ec3e411b2d" />
+
+---
+
+### Friend Discovery & Add Flow
+<table>
+  <tr>
+    <td><img width="400" alt="Screenshot 2026-05-02 013811" src="https://github.com/user-attachments/assets/f5cec0e1-cc7b-45ea-8e6d-2c457229dd4f" /></td>
+    <td><img width="400" alt="Screenshot 2026-05-02 014023" src="https://github.com/user-attachments/assets/32a487b7-2cfc-4260-b278-ee3882c3a539" /></td>
+  </tr>
+</table> 
+
+
+
+
+---
+### Messages load in real-time with no refresh.
+<img width="700"  alt="Screenshot 2026-05-02 015027" src="https://github.com/user-attachments/assets/7e41cfdb-dc6d-45c1-84df-88cb1fe4d2bb" />
+
+---
+### Create Group Chat by clicking + and Add Friends 
+
+<table>
+  <tr>
+    <td><img width="500" alt="Screenshot 2026-05-02 015248" src="https://github.com/user-attachments/assets/64772d54-0897-45ef-8c5a-fea8d93ec08b" /></td>
+    <td><img width="500" alt="Screenshot 2026-05-02 015401" src="https://github.com/user-attachments/assets/e400223a-fae1-4932-b26e-1ddd5436b9f2" /></td>
+  </tr>
+</table>
+<br>
+<table>
+    <td><img width="500" alt="Screenshot 2026-05-02 015331" src="https://github.com/user-attachments/assets/b756c81d-e4ff-4263-8400-8583dffdff70" /></td>
+    <td><img width="500" alt="Screenshot 2026-05-02 015519" src="https://github.com/user-attachments/assets/24518d42-506f-4701-9d6b-c5b85006c63e" /></td>
+  </tr>
+</table> 
+
+---
+
+### Send room-wide message
+
+- admin can add member and delete room
+- others can clear all chat
+
+<br>
+<img width="800" alt="Screenshot 2026-05-02 020641" src="https://github.com/user-attachments/assets/0866da0f-e4f4-4dc4-86e3-f334ec688b43" />
+<br>
+<br>
+<br>
+<img width="1920" height="1080" alt="Screenshot 2026-05-02 020804" src="https://github.com/user-attachments/assets/d15e94a3-2d4f-4c4d-840f-89a48456ddbd" />
+
+
+---
+
+### Admin can Delete room and notify users instantly 
+
+<img width="1920" height="1080" alt="Screenshot 2026-05-02 020931" src="https://github.com/user-attachments/assets/39e95c19-6201-4bd9-897f-c600b7ee1e5d" />
+
+
+---
 
 ## Tech Stack
 
